@@ -1,0 +1,782 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- Onshape document_id: 83c6259e88150cfb82072bf7 -->
+<robot name="robot_arm">
+  <!-- Link link_0 -->
+  <link name="link_0">
+    <inertial>
+      <origin xyz="0.147995 0.15 0.177582" rpy="0 0 0"/>
+      <mass value="5.00515"/>
+      <inertia ixx="0.129942" ixy="-1.76894e-07" ixz="2.59571e-06" iyy="0.125507" iyz="-5.752e-09" izz="0.100698"/>
+    </inertial>
+    <!-- Part 30x30_240mm_part2020 -->
+    <visual>
+      <origin xyz="0.0129999 0.285 0.24" rpy="0 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_240mm_part2020_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0129999 0.285 0.24" rpy="0 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_240mm_part2020_2 -->
+    <visual>
+      <origin xyz="0.028 0.0149999 0.255" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_240mm_part2020_2_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.028 0.0149999 0.255" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_240mm_part2020_3 -->
+    <visual>
+      <origin xyz="0.0129999 0.0149999 0.24" rpy="0 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_240mm_part2020_3_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0129999 0.0149999 0.24" rpy="0 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_300mm_part2020 -->
+    <visual>
+      <origin xyz="0.283 0 0.255" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_300mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_300mm_part2020_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.283 0 0.255" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_300mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_240mm_part2020_4 -->
+    <visual>
+      <origin xyz="0.028 0.285 0.255" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_240mm_part2020_4_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.028 0.285 0.255" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part yar_210_2f_bearing -->
+    <visual>
+      <origin xyz="0.148 0.15 0.29" rpy="-0 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/yar_210_2f_bearing.stl"/>
+      </geometry>
+      <material name="yar_210_2f_bearing_material">
+        <color rgba="0.756863 0.768627 0.752941 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.148 0.15 0.29" rpy="-0 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/yar_210_2f_bearing.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_240mm_part2020_5 -->
+    <visual>
+      <origin xyz="0.028 0.285 -0.0149999" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_240mm_part2020_5_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.028 0.285 -0.0149999" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1 -->
+    <visual>
+      <origin xyz="0.148 0.15 0.264" rpy="1.5708 -0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1.stl"/>
+      </geometry>
+      <material name="part_1_material">
+        <color rgba="0.756863 0.768627 0.752941 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.148 0.15 0.264" rpy="1.5708 -0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_240mm_part2020_6 -->
+    <visual>
+      <origin xyz="0.283 0.285 0.24" rpy="0 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_240mm_part2020_6_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.283 0.285 0.24" rpy="0 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_460mm_part2020 -->
+    <visual>
+      <origin xyz="0.0129999 -0.0800001 -0.0149999" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_460mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_460mm_part2020_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0129999 -0.0800001 -0.0149999" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_460mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_300mm_part2020_2 -->
+    <visual>
+      <origin xyz="0.0129999 0 0.255" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_300mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_300mm_part2020_2_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0129999 0 0.255" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_300mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_240mm_part2020_7 -->
+    <visual>
+      <origin xyz="0.283 0.0149999 0.24" rpy="0 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_240mm_part2020_7_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.283 0.0149999 0.24" rpy="0 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_460mm_part2020_2 -->
+    <visual>
+      <origin xyz="0.283 -0.0800001 -0.0149999" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_460mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_460mm_part2020_2_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.283 -0.0800001 -0.0149999" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_460mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 30x30_240mm_part2020_8 -->
+    <visual>
+      <origin xyz="0.028 0.0149999 -0.0149999" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+      <material name="30x30_240mm_part2020_8_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.028 0.0149999 -0.0149999" rpy="1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/30x30_240mm_part2020.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_2 -->
+    <visual>
+      <origin xyz="0.0729998 0.0899999 0.255" rpy="1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__2.stl"/>
+      </geometry>
+      <material name="part_1_2_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0729998 0.0899999 0.255" rpy="1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_3 -->
+    <visual>
+      <origin xyz="0.0279999 0.075 0.255" rpy="0 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__3.stl"/>
+      </geometry>
+      <material name="part_1_3_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0279999 0.075 0.255" rpy="0 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__3.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_4 -->
+    <visual>
+      <origin xyz="0.268 0.225 0.255" rpy="-3.14159 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__3.stl"/>
+      </geometry>
+      <material name="part_1_4_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.268 0.225 0.255" rpy="-3.14159 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__3.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_5 -->
+    <visual>
+      <origin xyz="0.223 0.0899999 0.255" rpy="1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__2.stl"/>
+      </geometry>
+      <material name="part_1_5_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.223 0.0899999 0.255" rpy="1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link link_1 -->
+  <link name="link_1">
+    <inertial>
+      <origin xyz="-0.00710741 0.00509171 -0.0182016" rpy="0 0 0"/>
+      <mass value="0.969338"/>
+      <inertia ixx="0.00694131" ixy="0.000481794" ixz="-8.3852e-05" iyy="0.00725578" iyz="5.77418e-05" izz="0.0032506"/>
+    </inertial>
+    <!-- Part part_7 -->
+    <visual>
+      <origin xyz="0 0 -0.026" rpy="-1.5708 -0 0.934987"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_7.stl"/>
+      </geometry>
+      <material name="part_7_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.026" rpy="-1.5708 -0 0.934987"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_7.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_2 -->
+    <visual>
+      <origin xyz="-0 -0 0" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_2.stl"/>
+      </geometry>
+      <material name="part_2_material">
+        <color rgba="0.866667 0.909804 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0 -0 0" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_6 -->
+    <visual>
+      <origin xyz="0 0 -0.005" rpy="2.20661 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__4.stl"/>
+      </geometry>
+      <material name="part_1_6_material">
+        <color rgba="0.866667 0.909804 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.005" rpy="2.20661 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_7 -->
+    <visual>
+      <origin xyz="0 0 -0.026" rpy="-1.5708 -0 0.934987"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__5.stl"/>
+      </geometry>
+      <material name="part_1_7_material">
+        <color rgba="0.65098 0.619608 0.584314 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.026" rpy="-1.5708 -0 0.934987"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__5.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link link_2 -->
+  <link name="link_2">
+    <inertial>
+      <origin xyz="-0.0208105 0.0471385 0.00308803" rpy="0 0 0"/>
+      <mass value="1.25175"/>
+      <inertia ixx="0.0123399" ixy="0.00481994" ixz="-0.000167892" iyy="0.00731321" iyz="0.000168937" izz="0.0165602"/>
+    </inertial>
+    <!-- Part part_1_8 -->
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__6.stl"/>
+      </geometry>
+      <material name="part_1_8_material">
+        <color rgba="0.843137 0.815686 0.752941 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__6.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_9 -->
+    <visual>
+      <origin xyz="-0 -0 0.0415" rpy="0 0 2.0944"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__7.stl"/>
+      </geometry>
+      <material name="part_1_9_material">
+        <color rgba="0.901961 0.917647 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0 -0 0.0415" rpy="0 0 2.0944"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__7.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_10 -->
+    <visual>
+      <origin xyz="-0.15 0.259808 0.04" rpy="1.5708 -0 0.523599"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__8.stl"/>
+      </geometry>
+      <material name="part_1_10_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.15 0.259808 0.04" rpy="1.5708 -0 0.523599"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__8.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_mirrored -->
+    <visual>
+      <origin xyz="-1.3363e-08 -4.27e-09 -0.0414999" rpy="0 0 2.0944"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1_mirrored.stl"/>
+      </geometry>
+      <material name="part_1_mirrored_material">
+        <color rgba="0.901961 0.917647 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-1.3363e-08 -4.27e-09 -0.0414999" rpy="0 0 2.0944"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1_mirrored.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link link_3 -->
+  <link name="link_3">
+    <inertial>
+      <origin xyz="0.155777 -0.00245519 2.28464e-07" rpy="0 0 0"/>
+      <mass value="0.829403"/>
+      <inertia ixx="0.000596173" ixy="0.000319565" ixz="-2.3376e-08" iyy="0.0172838" iyz="1.301e-09" izz="0.0174621"/>
+    </inertial>
+    <!-- Part part_4 -->
+    <visual>
+      <origin xyz="0.04 0 0" rpy="-3.14159 -0 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_4.stl"/>
+      </geometry>
+      <material name="part_4_material">
+        <color rgba="0.2 0.4 0.701961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.04 0 0" rpy="-3.14159 -0 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part revisedupperdrum -->
+    <visual>
+      <origin xyz="0 0 -0" rpy="1.5708 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/revisedupperdrum.stl"/>
+      </geometry>
+      <material name="revisedupperdrum_material">
+        <color rgba="0.980392 0.713725 0.00392157 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0" rpy="1.5708 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/revisedupperdrum.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_11 -->
+    <visual>
+      <origin xyz="0.33 0 0" rpy="3.14159 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__9.stl"/>
+      </geometry>
+      <material name="part_1_11_material">
+        <color rgba="0.796078 0.823529 0.937255 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.33 0 0" rpy="3.14159 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__9.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_12 -->
+    <visual>
+      <origin xyz="0.33 0 0" rpy="0 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__10.stl"/>
+      </geometry>
+      <material name="part_1_12_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.33 0 0" rpy="0 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__10.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link link_4 -->
+  <link name="link_4">
+    <inertial>
+      <origin xyz="3.91084e-05 0 -0.0250938" rpy="0 0 0"/>
+      <mass value="0.258437"/>
+      <inertia ixx="4.98463e-05" ixy="0" ixz="1.20337e-07" iyy="8.16682e-05" iyz="-0" izz="4.89515e-05"/>
+    </inertial>
+    <!-- Part part_1_13 -->
+    <visual>
+      <origin xyz="-0.02005 0.01 -0.0068" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__11.stl"/>
+      </geometry>
+      <material name="part_1_13_material">
+        <color rgba="0.619608 0.407843 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.02005 0.01 -0.0068" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__11.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link link_5 -->
+  <link name="link_5">
+    <inertial>
+      <origin xyz="0.0476739 -0 -0.0113748" rpy="0 0 0"/>
+      <mass value="0.27051"/>
+      <inertia ixx="5.79875e-05" ixy="0" ixz="4.23428e-06" iyy="0.000102388" iyz="-0" izz="6.23535e-05"/>
+    </inertial>
+    <!-- Part part_1_14 -->
+    <visual>
+      <origin xyz="0.025 0.01 -0" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__12.stl"/>
+      </geometry>
+      <material name="part_1_14_material">
+        <color rgba="0.866667 0.909804 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.025 0.01 -0" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__12.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_15 -->
+    <visual>
+      <origin xyz="0.029 -0.01 -0.0302" rpy="-1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__13.stl"/>
+      </geometry>
+      <material name="part_1_15_material">
+        <color rgba="0.619608 0.407843 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.029 -0.01 -0.0302" rpy="-1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__13.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link link_6 -->
+  <link name="link_6">
+    <inertial>
+      <origin xyz="0.00452199 -1.89539e-06 -0.0801466" rpy="0 0 0"/>
+      <mass value="0.113628"/>
+      <inertia ixx="0.000177378" ixy="-6.616e-09" ixz="-7.6256e-06" iyy="0.000189127" iyz="-4.902e-09" izz="6.47328e-05"/>
+    </inertial>
+    <!-- Part part_1_16 -->
+    <visual>
+      <origin xyz="0 0 -0.105" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__14.stl"/>
+      </geometry>
+      <material name="part_1_16_material">
+        <color rgba="0.796078 0.823529 0.937255 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.105" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__14.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_17 -->
+    <visual>
+      <origin xyz="0 0 -0.105" rpy="0 0 -0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__15.stl"/>
+      </geometry>
+      <material name="part_1_17_material">
+        <color rgba="0.796078 0.823529 0.937255 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.105" rpy="0 0 -0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__15.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_18 -->
+    <visual>
+      <origin xyz="-0.0350549 -0.0025 -0.075" rpy="-3.14159 -0 1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__16.stl"/>
+      </geometry>
+      <material name="part_1_18_material">
+        <color rgba="0.796078 0.823529 0.937255 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0350549 -0.0025 -0.075" rpy="-3.14159 -0 1.5708"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__16.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_19 -->
+    <visual>
+      <origin xyz="0.0196925 -0.0291085 -0.075" rpy="3.14159 -0 -2.61799"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__16.stl"/>
+      </geometry>
+      <material name="part_1_19_material">
+        <color rgba="0.796078 0.823529 0.937255 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0196925 -0.0291085 -0.075" rpy="3.14159 -0 -2.61799"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__16.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_1_20 -->
+    <visual>
+      <origin xyz="0.0153624 0.0316085 -0.075" rpy="3.14159 0 -0.523599"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__16.stl"/>
+      </geometry>
+      <material name="part_1_20_material">
+        <color rgba="0.796078 0.823529 0.937255 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0153624 0.0316085 -0.075" rpy="3.14159 0 -0.523599"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/part_1__16.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link bore_1 -->
+  <link name="bore_1">
+    <inertial>
+      <origin xyz="-0 -0 -0.00845919" rpy="0 0 0"/>
+      <mass value="0.00214046"/>
+      <inertia ixx="6.2405e-08" ixy="0" ixz="-0" iyy="6.2405e-08" iyz="0" izz="4.998e-08"/>
+    </inertial>
+    <!-- Part bore_1 -->
+    <visual>
+      <origin xyz="0 -0 -0.00800005" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/bore_1.stl"/>
+      </geometry>
+      <material name="bore_1_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -0 -0.00800005" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/bore_1.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from link_6 to bore_1 -->
+  <joint name="joint_gripper_servo" type="revolute">
+    <origin xyz="0.02 -0 -0.072" rpy="0 -0 0.279493"/>
+    <parent link="link_6"/>
+    <child link="bore_1"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Link bore_1_2 -->
+  <link name="bore_1_2">
+    <inertial>
+      <origin xyz="-8.0138e-08 1.6262e-08 -0.00694435" rpy="0 0 0"/>
+      <mass value="0.0117484"/>
+      <inertia ixx="8.16964e-07" ixy="-3e-12" ixz="5e-12" iyy="8.17038e-07" iyz="-1e-12" izz="1.20505e-06"/>
+    </inertial>
+    <!-- Part bore_1_2 -->
+    <visual>
+      <origin xyz="-0 0 -0.00800005" rpy="3.00171 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/bore_1__2.stl"/>
+      </geometry>
+      <material name="bore_1_2_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0 0 -0.00800005" rpy="3.00171 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://robot_arm_description/assets/bore_1__2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from link_6 to bore_1_2 -->
+  <joint name="joint_gripper_cam" type="revolute">
+    <origin xyz="0 0 -0.095" rpy="-3.14159 0 0"/>
+    <parent link="link_6"/>
+    <child link="bore_1_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
+    <mimic joint="joint_gripper_servo" multiplier="-1.86"/>
+  </joint>
+  <!-- Joint from link_5 to link_6 -->
+  <joint name="joint_5" type="revolute">
+    <origin xyz="0.0721 -0 -0" rpy="1.5708 1.50448 -1.5708"/>
+    <parent link="link_5"/>
+    <child link="link_6"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Joint from link_4 to link_5 -->
+  <joint name="joint_4" type="revolute">
+    <origin xyz="-0 0 -0.037" rpy="0 1.5708 0"/>
+    <parent link="link_4"/>
+    <child link="link_5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Joint from link_3 to link_4 -->
+  <joint name="joint_3" type="revolute">
+    <origin xyz="0.341 0 0" rpy="0 -1.5708 0"/>
+    <parent link="link_3"/>
+    <child link="link_4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Joint from link_2 to link_3 -->
+  <joint name="joint_2" type="revolute">
+    <origin xyz="-0.15 0.259808 0" rpy="0 -0 2.0944"/>
+    <parent link="link_2"/>
+    <child link="link_3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Joint from link_1 to link_2 -->
+  <joint name="joint_1" type="revolute">
+    <origin xyz="0.0362066 -0.0267223 -0.146" rpy="-1.5708 -0.523599 2.50578"/>
+    <parent link="link_1"/>
+    <child link="link_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Joint from link_0 to link_1 -->
+  <joint name="joint_0" type="revolute">
+    <origin xyz="0.148 0.15 0.309" rpy="-3.14159 -0 -0.63581"/>
+    <parent link="link_0"/>
+    <child link="link_1"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+</robot>

@@ -1,0 +1,46 @@
+
+
+{
+  "documentId": "83c6259e88150cfb82072bf7",
+  "outputFormat": "urdf",
+  "packageName": "robot_arm_description",
+  "robotName": "robot_arm",
+  "assemblyName": "FullRobotAssembly",
+  "export_stl_with_meters": true,
+  "set_zero_mass_to_fixed": false,
+  "default_joint_type": "continuous",
+  "mesh_output_format": "stl",
+  "joint_properties": {
+      "default": {
+          "max_effort": 100,
+          "max_velocity": 100
+      },
+      "dof_joint_0": { 
+          "type": "revolute"
+      },
+      "dof_joint_1": { 
+          "type": "revolute"
+      },
+      "dof_joint_2": { 
+          "type": "revolute"
+      },
+      "dof_joint_3": { 
+          "type": "revolute"
+      },
+      "dof_joint_4": {
+          "type": "revolute"
+      },
+      "dof_joint_5": {
+          "type": "revolute"
+      },
+      "dof_joint_gripper_servo": {
+          "type": "revolute"
+      },
+      "dof_joint_gripper_cam": {
+          "type": "revolute"
+      }
+
+
+  }
+}
+
