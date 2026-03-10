@@ -24,7 +24,7 @@ if(BUILD_TESTING)
 endif()
 
 # Install the 3D meshes
-install(DIRECTORY assets launch params rviz xacro_properties 
+install(DIRECTORY assets launch params rviz 
   DESTINATION share/${PROJECT_NAME}
 )
 
