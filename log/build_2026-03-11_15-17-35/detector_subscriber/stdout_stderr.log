@@ -1,0 +1,23 @@
+running develop
+running egg_info
+creating detector_subscriber.egg-info
+writing detector_subscriber.egg-info/PKG-INFO
+writing dependency_links to detector_subscriber.egg-info/dependency_links.txt
+writing entry points to detector_subscriber.egg-info/entry_points.txt
+writing requirements to detector_subscriber.egg-info/requires.txt
+writing top-level names to detector_subscriber.egg-info/top_level.txt
+writing manifest file 'detector_subscriber.egg-info/SOURCES.txt'
+reading manifest file 'detector_subscriber.egg-info/SOURCES.txt'
+writing manifest file 'detector_subscriber.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages/detector-subscriber.egg-link (link to .)
+Installing aruco_visualizer script to /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/detector_subscriber
+Installing spatial_subscriber script to /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/detector_subscriber
+
+Installed /home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber
+running symlink_data
+creating /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/ament_index
+creating /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/ament_index/resource_index
+creating /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/ament_index/resource_index/packages
+symbolically linking /home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/resource/detector_subscriber -> /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/ament_index/resource_index/packages
+symbolically linking /home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/package.xml -> /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber

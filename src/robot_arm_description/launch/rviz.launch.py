@@ -7,6 +7,8 @@ from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitut
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
 
@@ -28,7 +30,7 @@ def generate_launch_description():
         'urdf_model',
         default_value=PathJoinSubstitution([pkg_share, 'robot.urdf']), # Pointing directly to the plain URDF
         description='Absolute path to robot URDF file')
-    
+   
     # ================== Robot Description Setup =================== #
     # Process the URDF file (the xacro command safely reads standard URDFs too)
     robot_description_content = ParameterValue(
@@ -78,7 +80,7 @@ def generate_launch_description():
 
     # Add nodes to the launch description
     ld.add_action(start_robot_state_publisher_cmd)
-    ld.add_action(start_joint_state_publisher_gui_cmd)
+#    ld.add_action(start_joint_state_publisher_gui_cmd)
     ld.add_action(start_rviz_cmd)
 
     return ld
