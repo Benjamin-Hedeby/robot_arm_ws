@@ -707,7 +707,7 @@
     </collision>
   </link>
   <!-- Joint from link_6 to bore_1 -->
-  <joint name="joint_gripper_servo" type="revolute">
+  <joint name="gripper_controller" type="revolute">
     <origin xyz="-0.019956 -0.00132529 -0.0908" rpy="0 -0 -2.79579"/>
     <parent link="link_6"/>
     <child link="bore_1"/>
@@ -780,49 +780,40 @@
     <limit effort="100" velocity="100"/>
   </joint>
 
-  <!-- Makes sure the oak camera frame is placed attached -->
-  <link name="oak"/>
-
-  <joint name="cad_to_camera_logic_joint" type="fixed">
-    <parent link="oak-d-s2"/>
-    <child link="oak"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </joint>
-
   <!-- Joint from link_5 to link_6 -->
-  <joint name="joint_5" type="revolute">
+  <joint name="joint6" type="revolute">
     <origin xyz="0.0721 -0 -0" rpy="0 -1.5708 0"/>
     <parent link="link_5"/>
     <child link="link_6"/>
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 -1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
   <!-- Joint from link_4 to link_5 -->
-  <joint name="joint_4" type="revolute">
+  <joint name="joint5" type="revolute">
     <origin xyz="-0 0 -0.037" rpy="-0 1.5708 0"/>
     <parent link="link_4"/>
     <child link="link_5"/>
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 -1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
   <!-- Joint from link_3 to link_4 -->
-  <joint name="joint_3" type="revolute">
+  <joint name="joint4" type="revolute">
     <origin xyz="0.341 0 0" rpy="0 -1.5708 0"/>
     <parent link="link_3"/>
     <child link="link_4"/>
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 -1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
   <!-- Joint from link_2 to link_3 -->
-  <joint name="joint_2" type="revolute">
+  <joint name="joint3" type="revolute">
     <origin xyz="-0.15 0.259808 0" rpy="0 0 2.0944"/>
     <parent link="link_2"/>
     <child link="link_3"/>
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 -1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
   <!-- Joint from link_1 to link_2 -->
-  <joint name="joint_1" type="revolute">
+  <joint name="joint2" type="revolute">
     <origin xyz="0.0362066 -0.0267223 -0.146" rpy="-1.5708 -0.523599 2.50578"/>
     <parent link="link_1"/>
     <child link="link_2"/>
@@ -830,7 +821,7 @@
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
   <!-- Joint from link_0 to link_1 -->
-  <joint name="joint_0" type="revolute">
+  <joint name="joint1" type="revolute">
     <origin xyz="0.148 0.15 0.309" rpy="3.14159 0 -0.63581"/>
     <parent link="link_0"/>
     <child link="link_1"/>
