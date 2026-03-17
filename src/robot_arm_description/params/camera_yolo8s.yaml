@@ -7,7 +7,7 @@
       i_publish_tf_from_calibration: false
       i_external_calibration_path: "/mnt/hgfs/VMware_ubuntu/yolo_config/custom_calib.json"
       i_tf_base_frame: "oak"
-      i_tf_parent_frame: "oak-d-s2"       
+      i_tf_parent_frame: "oak_d_s2"       
  
     rgb:
       i_publish_topic: true

@@ -15,32 +15,34 @@
           "max_effort": 100,
           "max_velocity": 100
       },
-      "dof_joint_0": { 
+      "dof_joint1": { 
           "type": "revolute"
       },
-      "dof_joint_1": { 
+      "dof_joint2": { 
           "type": "revolute"
       },
-      "dof_joint_2": { 
+      "dof_joint3": { 
           "type": "revolute"
       },
-      "dof_joint_3": { 
+      "dof_joint4": {
           "type": "revolute"
       },
-      "dof_joint_4": {
+      "dof_joint5": {
           "type": "revolute"
       },
-      "dof_joint_5": {
+      "dof_gripper1": {
           "type": "revolute"
       },
-      "dof_joint_gripper_servo": {
+      "dof_gripper2": {
           "type": "revolute"
       },
-      "dof_joint_gripper_cam": {
+      "dof_gripper3": {
           "type": "revolute"
+      },
+      "dof_oak_d_s2": {
+          "type": "fixed"
       }
-
-
+    }
   }
-}
+
 

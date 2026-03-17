@@ -66,7 +66,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'name': 'oak',
-            'parent_frame': 'oak-d-s2',     # Glues camera to your URDF
+            'parent_frame': 'oak_d_s2',     # Glues camera to your URDF
             'publish_urdf': 'false',        # Stops it from overwriting your arm!
             'use_urdf': 'false', 
             'publish_tf': 'false',
