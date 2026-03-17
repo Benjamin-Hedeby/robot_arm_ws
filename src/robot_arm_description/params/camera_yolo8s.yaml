@@ -1,0 +1,42 @@
+/oak:
+  ros__parameters:
+    camera:
+      i_pipeline_type: RGBD           
+      i_nn_type: spatial          
+      i_enable_imu: true  
+      i_publish_tf_from_calibration: false
+      i_external_calibration_path: "/mnt/hgfs/VMware_ubuntu/yolo_config/custom_calib.json"
+      i_tf_base_frame: "oak"
+      i_tf_parent_frame: "oak-d-s2"       
+ 
+    rgb:
+      i_publish_topic: true
+      i_fps: 20.0                     # 20 FPS is plenty for WiFi & YOLO
+      i_resolution: 1080P             # Good balance of quality/speed
+      i_preview_width: 640             # MUST match your YOLO blob size (usually 640)
+      i_preview_height: 640
+
+    stereo:
+      i_align_depth: true            # Aligns depth to RGB (Required for overlay)
+      i_publish_topic: true          # Publish depth for debugging
+      i_subpixel: true                # Better accuracy
+      i_depth_filter_size: 5          # Smooths out noise
+
+    nn:
+      i_nn_config_path: "/mnt/hgfs/VMware_ubuntu/yolo_config/yolo8s.json"
+      i_blob_path: "/mnt/hgfs/VMware_ubuntu/yolo_config/yolo8s_openvino_2022.1_5shave.blob"
+      i_num_shaves: 5             
+      i_disable_resize: true
+
+      spatial_network_configuration:
+         i_bb_scale_factor: 0.5         # Measure depth in the center 50% of the box
+         i_depth_threshold_lower: 100   # Ignore things closer than 10cm
+         i_depth_threshold_upper: 10000 # Ignore things further than 10m
+         i_calc_algo: "MEDIAN"
+    
+    imu:
+      i_acc_freq: 400          # Accelerometer Hz (400 is standard)
+      i_gyro_freq: 400         # Gyroscope Hz
+      i_rot_freq: 100          # Rotation Vector (calculated orientation)
+      i_batch_report_threshold: 1 # Publish every packet immediately (lower latency)
+      i_max_batch_reports: 10     # Group packets if network is busy

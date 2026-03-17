@@ -33,8 +33,15 @@ def generate_launch_description():
         output='screen'
     )
 
+    start_joint_state_publisher_cmd = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher'
+    )
+
     # Return the clean launch description
     return LaunchDescription([
         start_rsp_cmd,
         start_rviz_cmd,
+        start_joint_state_publisher_cmd
     ])

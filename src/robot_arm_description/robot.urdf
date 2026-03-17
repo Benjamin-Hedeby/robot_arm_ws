@@ -745,7 +745,7 @@
     <child link="bore_1_2"/>
     <axis xyz="0 0 1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
-    <mimic joint="joint_gripper_servo" multiplier="-1.86"/>
+    <mimic joint="gripper_controller" multiplier="-1.86"/>
   </joint>
   <!-- Link oak-d-s2 -->
   <link name="oak-d-s2">
