@@ -25,7 +25,8 @@ setup(
     entry_points={
         'console_scripts': [
             'controller_joint_test = controller_joint_test.controller_joint_test:main',
-            'live_ik_streamer = controller_joint_test.live_ik_streamer:main'
+            'live_ik_streamer = controller_joint_test.live_ik_streamer:main',
+            'task_controller = controller_joint_test.task_controller:main'
         ],
     },
 )

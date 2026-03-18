@@ -10,7 +10,7 @@ class LiveIKStreamer(Node):
     def __init__(self):
         super().__init__('live_ik_streamer')
         
-        # 1. Subscriber: Now listens for an array of 6 floats [X, Y, Z, R, P, Y]
+        # 1. Subscriber: Listens for an array of 6 floats [X, Y, Z, R, P, Y]
         self.target_sub = self.create_subscription(
             Float64MultiArray,
             '/desired_tcp_pose_euler',
@@ -42,13 +42,41 @@ class LiveIKStreamer(Node):
             
             # Run the Inverse Kinematics calculation
             joints = inverse_kinematics(position, orientation)
+
+            # --- SAFETY SHIELD: JOINT LIMITS ---
+            joint_limits = [
+                [-3.12, 3.12],         # Joint 1 (Base)
+                [-1.05, 1.92],         # Joint 2 (Shoulder)
+                [-2.27, 2.27],         # Joint 3 (Elbow)
+                [-2.09, 2.09],         # Joint 4 (Wrist 1)
+                [-2.09, 2.09]          # Joint 5 (Wrist 2)
+            ]
+            
+            # Check the first 5 physical joints against their limits
+            limit_exceeded = False
+            for i in range(5):
+                if not (joint_limits[i][0] <= joints[i] <= joint_limits[i][1]):
+                    self.get_logger().error(
+                        f"SAFETY TRIGGERED! Joint {i+1} requested angle {round(joints[i], 3)} rad "
+                        f"is out of physical bounds [{round(joint_limits[i][0], 2)}, {round(joint_limits[i][1], 2)}]."
+                    )
+                    limit_exceeded = True
+            
+            # Abort the entire movement if any joint is dangerous
+            if limit_exceeded:
+                self.get_logger().warn("Move aborted to prevent self-collision!")
+                return 
+            # -----------------------------------
             
             # Print the result to the terminal!
-            self.get_logger().info(f"SUCCESS! Calculated Joint Angles: {[round(j, 3) for j in joints]}")
+            self.get_logger().info(f"SUCCESS! Calculated Joint Angles: {[round(j, 3) for j in joints]}", throttle_duration_sec=2.0)
+
+            # Changed from 6DOF to 5DOF:
+            physical_joints = joints[:5]
             
             # Round to 4 decimal places to prevent scientific notation (e-18)
             # from crashing the hardware controllers.
-            cleaned_joints = [round(float(j), 4) for j in joints]
+            cleaned_joints = [round(float(j), 4) for j in physical_joints]
             
             # If a number is just negative zero (-0.0), force it to absolute 0.0
             cleaned_joints = [0.0 if j == -0.0 else j for j in cleaned_joints]
@@ -59,7 +87,7 @@ class LiveIKStreamer(Node):
             
             self.joint_pub.publish(cmd_msg)
             
-            self.get_logger().info(f"Sent clean joints: {cleaned_joints}")
+            self.get_logger().info(f"Sent clean joints: {cleaned_joints}", throttle_duration_sec=2.0)
 
         except Exception as e:
             self.get_logger().error(f"Failed to stream IK: {e}")
