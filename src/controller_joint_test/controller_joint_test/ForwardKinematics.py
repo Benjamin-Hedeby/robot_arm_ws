@@ -65,6 +65,13 @@ def forward_kinematics(joints, verbose=False):
         a = params[1]
         d = params[2]
         theta = joints[i]
+        # Convert from physical motor angle q to mathematical DH angle theta
+        if i == 0:
+            theta = -theta
+        elif i == 1:
+            theta = -theta + pi/2
+        elif i == 2:
+            theta = theta + pi/2
 
         # Calculate transformation for current link
         T_i = get_modified_dh_matrix(alpha, a, d, theta)

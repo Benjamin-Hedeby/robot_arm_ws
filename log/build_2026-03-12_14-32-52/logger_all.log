@@ -1,0 +1,355 @@
+[0.112s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--symlink-install']
+[0.112s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=8, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x767cbe49e2a0>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x767cbe444200>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x767cbe444200>>, mixin_verb=('build',))
+[0.150s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.150s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.150s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.150s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.150s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.150s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.150s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/dev_computer/Desktop/robot_arm_ws'
+[0.150s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.150s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.150s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.150s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extensions ['ignore', 'ignore_ament_install']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extension 'ignore'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extension 'ignore_ament_install'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extensions ['colcon_pkg']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extension 'colcon_pkg'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extensions ['colcon_meta']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extension 'colcon_meta'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extensions ['ros']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(src/controller_joint_test) by extension 'ros'
+[0.181s] DEBUG:colcon.colcon_core.package_identification:Package 'src/controller_joint_test' with type 'ros.ament_python' and name 'controller_joint_test'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extension 'ignore_ament_install'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extensions ['colcon_pkg']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extension 'colcon_pkg'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extensions ['colcon_meta']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extension 'colcon_meta'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extensions ['ros']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector) by extension 'ros'
+[0.183s] DEBUG:colcon.colcon_core.package_identification:Package 'src/detector' with type 'ros.ament_python' and name 'detector'
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extensions ['ignore', 'ignore_ament_install']
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extension 'ignore'
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extension 'ignore_ament_install'
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extensions ['colcon_pkg']
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extension 'colcon_pkg'
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extensions ['colcon_meta']
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extension 'colcon_meta'
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extensions ['ros']
+[0.183s] Level 1:colcon.colcon_core.package_identification:_identify(src/detector_subscriber) by extension 'ros'
+[0.184s] DEBUG:colcon.colcon_core.package_identification:Package 'src/detector_subscriber' with type 'ros.ament_python' and name 'detector_subscriber'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extensions ['ignore', 'ignore_ament_install']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extension 'ignore'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extension 'ignore_ament_install'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extensions ['colcon_pkg']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extension 'colcon_pkg'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extensions ['colcon_meta']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extension 'colcon_meta'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extensions ['ros']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(src/robot_arm_description) by extension 'ros'
+[0.185s] DEBUG:colcon.colcon_core.package_identification:Package 'src/robot_arm_description' with type 'ros.ament_cmake' and name 'robot_arm_description'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extensions ['ignore', 'ignore_ament_install']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extension 'ignore'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extension 'ignore_ament_install'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extensions ['colcon_pkg']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extension 'colcon_pkg'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extensions ['colcon_meta']
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extension 'colcon_meta'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extensions ['ros']
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(src/spatial_detector) by extension 'ros'
+[0.186s] DEBUG:colcon.colcon_core.package_identification:Package 'src/spatial_detector' with type 'ros.ament_python' and name 'spatial_detector'
+[0.186s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.186s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.187s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.187s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.187s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.207s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.207s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.209s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 5 installed packages in /home/dev_computer/Desktop/robot_arm_ws/install
+[0.211s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 470 installed packages in /opt/ros/jazzy
+[0.213s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'cmake_args' from command line to 'None'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'cmake_target' from command line to 'None'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'cmake_clean_cache' from command line to 'False'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'cmake_clean_first' from command line to 'False'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'cmake_force_configure' from command line to 'False'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'ament_cmake_args' from command line to 'None'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'catkin_cmake_args' from command line to 'None'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'controller_joint_test' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.279s] DEBUG:colcon.colcon_core.verb:Building package 'controller_joint_test' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test', 'merge_install': False, 'path': '/home/dev_computer/Desktop/robot_arm_ws/src/controller_joint_test', 'symlink_install': True, 'test_result_base': None}
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'cmake_args' from command line to 'None'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'cmake_target' from command line to 'None'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'cmake_clean_cache' from command line to 'False'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'cmake_clean_first' from command line to 'False'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'cmake_force_configure' from command line to 'False'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'ament_cmake_args' from command line to 'None'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'catkin_cmake_args' from command line to 'None'
+[0.279s] Level 5:colcon.colcon_core.verb:set package 'detector' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.280s] DEBUG:colcon.colcon_core.verb:Building package 'detector' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/dev_computer/Desktop/robot_arm_ws/build/detector', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/dev_computer/Desktop/robot_arm_ws/install/detector', 'merge_install': False, 'path': '/home/dev_computer/Desktop/robot_arm_ws/src/detector', 'symlink_install': True, 'test_result_base': None}
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'cmake_args' from command line to 'None'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'cmake_target' from command line to 'None'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'cmake_clean_cache' from command line to 'False'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'cmake_clean_first' from command line to 'False'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'cmake_force_configure' from command line to 'False'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'ament_cmake_args' from command line to 'None'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'catkin_cmake_args' from command line to 'None'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'detector_subscriber' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.280s] DEBUG:colcon.colcon_core.verb:Building package 'detector_subscriber' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber', 'merge_install': False, 'path': '/home/dev_computer/Desktop/robot_arm_ws/src/detector_subscriber', 'symlink_install': True, 'test_result_base': None}
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'cmake_args' from command line to 'None'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'cmake_target' from command line to 'None'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'cmake_clean_cache' from command line to 'False'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'cmake_clean_first' from command line to 'False'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'cmake_force_configure' from command line to 'False'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'ament_cmake_args' from command line to 'None'
+[0.280s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'catkin_cmake_args' from command line to 'None'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'robot_arm_description' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.281s] DEBUG:colcon.colcon_core.verb:Building package 'robot_arm_description' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description', 'merge_install': False, 'path': '/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description', 'symlink_install': True, 'test_result_base': None}
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'cmake_args' from command line to 'None'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'cmake_target' from command line to 'None'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'cmake_clean_cache' from command line to 'False'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'cmake_clean_first' from command line to 'False'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'cmake_force_configure' from command line to 'False'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'ament_cmake_args' from command line to 'None'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'catkin_cmake_args' from command line to 'None'
+[0.281s] Level 5:colcon.colcon_core.verb:set package 'spatial_detector' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.281s] DEBUG:colcon.colcon_core.verb:Building package 'spatial_detector' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector', 'merge_install': False, 'path': '/home/dev_computer/Desktop/robot_arm_ws/src/spatial_detector', 'symlink_install': True, 'test_result_base': None}
+[0.281s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.282s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.282s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/dev_computer/Desktop/robot_arm_ws/src/controller_joint_test' with build type 'ament_python'
+[0.283s] Level 1:colcon.colcon_core.shell:create_environment_hook('controller_joint_test', 'ament_prefix_path')
+[0.286s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.286s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/hook/ament_prefix_path.ps1'
+[0.287s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/hook/ament_prefix_path.dsv'
+[0.288s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/hook/ament_prefix_path.sh'
+[0.289s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.289s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.296s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/dev_computer/Desktop/robot_arm_ws/src/detector' with build type 'ament_python'
+[0.296s] Level 1:colcon.colcon_core.shell:create_environment_hook('detector', 'ament_prefix_path')
+[0.297s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/hook/ament_prefix_path.ps1'
+[0.297s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/hook/ament_prefix_path.dsv'
+[0.298s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/hook/ament_prefix_path.sh'
+[0.299s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.299s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.303s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/dev_computer/Desktop/robot_arm_ws/src/detector_subscriber' with build type 'ament_python'
+[0.303s] Level 1:colcon.colcon_core.shell:create_environment_hook('detector_subscriber', 'ament_prefix_path')
+[0.303s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/hook/ament_prefix_path.ps1'
+[0.305s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/hook/ament_prefix_path.dsv'
+[0.305s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/hook/ament_prefix_path.sh'
+[0.306s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.306s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.313s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description' with build type 'ament_cmake'
+[0.314s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description'
+[0.314s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.314s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.319s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/dev_computer/Desktop/robot_arm_ws/src/spatial_detector' with build type 'ament_python'
+[0.319s] Level 1:colcon.colcon_core.shell:create_environment_hook('spatial_detector', 'ament_prefix_path')
+[0.319s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/hook/ament_prefix_path.ps1'
+[0.320s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/hook/ament_prefix_path.dsv'
+[0.320s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/hook/ament_prefix_path.sh'
+[0.321s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.321s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.580s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/dev_computer/Desktop/robot_arm_ws/src/controller_joint_test'
+[0.580s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.580s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.872s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/dev_computer/Desktop/robot_arm_ws/src/detector'
+[0.872s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.872s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.126s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/dev_computer/Desktop/robot_arm_ws/src/detector_subscriber'
+[1.127s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.127s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.135s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector:/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber:/home/dev_computer/Desktop/robot_arm_ws/install/detector:/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description -- -j8 -l8
+[1.395s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/dev_computer/Desktop/robot_arm_ws/src/spatial_detector'
+[1.395s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.396s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.408s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector:/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber:/home/dev_computer/Desktop/robot_arm_ws/install/detector:/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description -- -j8 -l8
+[1.424s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector:/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber:/home/dev_computer/Desktop/robot_arm_ws/install/detector:/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description
+[1.498s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_arm_description)
+[1.499s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector:/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber:/home/dev_computer/Desktop/robot_arm_ws/install/detector:/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/dev_computer/Desktop/robot_arm_ws/build/robot_arm_description
+[1.504s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description' for CMake module files
+[1.506s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description' for CMake config files
+[1.507s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_arm_description', 'cmake_prefix_path')
+[1.508s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/hook/cmake_prefix_path.ps1'
+[1.509s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/hook/cmake_prefix_path.dsv'
+[1.510s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/hook/cmake_prefix_path.sh'
+[1.511s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/bin'
+[1.511s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/lib/pkgconfig/robot_arm_description.pc'
+[1.512s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/lib/python3.12/site-packages'
+[1.513s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/bin'
+[1.514s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.ps1'
+[1.515s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.dsv'
+[1.517s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.sh'
+[1.518s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.bash'
+[1.520s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.zsh'
+[1.522s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/colcon-core/packages/robot_arm_description)
+[1.523s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_arm_description)
+[1.523s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description' for CMake module files
+[1.525s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description' for CMake config files
+[1.527s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_arm_description', 'cmake_prefix_path')
+[1.527s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/hook/cmake_prefix_path.ps1'
+[1.528s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/hook/cmake_prefix_path.dsv'
+[1.529s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/hook/cmake_prefix_path.sh'
+[1.531s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/bin'
+[1.531s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/lib/pkgconfig/robot_arm_description.pc'
+[1.531s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/lib/python3.12/site-packages'
+[1.532s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/bin'
+[1.533s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.ps1'
+[1.534s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.dsv'
+[1.536s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.sh'
+[1.537s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.bash'
+[1.538s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/robot_arm_description/package.zsh'
+[1.539s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/dev_computer/Desktop/robot_arm_ws/install/robot_arm_description/share/colcon-core/packages/robot_arm_description)
+[2.609s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/build --no-deps symlink_data
+[2.618s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector/build --no-deps symlink_data
+[2.622s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/build --no-deps symlink_data
+[2.625s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/dev_computer/Desktop/robot_arm_ws/build/detector': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/detector/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/detector/build --no-deps symlink_data
+[4.051s] Level 1:colcon.colcon_core.shell:create_environment_hook('spatial_detector', 'pythonpath_develop')
+[4.052s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector/share/spatial_detector/hook/pythonpath_develop.ps1'
+[4.054s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector/share/spatial_detector/hook/pythonpath_develop.dsv'
+[4.055s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector/build --no-deps symlink_data
+[4.058s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector/share/spatial_detector/hook/pythonpath_develop.sh'
+[4.061s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector' for CMake module files
+[4.062s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector' for CMake config files
+[4.064s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib'
+[4.065s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/bin'
+[4.065s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib/pkgconfig/spatial_detector.pc'
+[4.066s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib/python3.12/site-packages'
+[4.067s] Level 1:colcon.colcon_core.shell:create_environment_hook('spatial_detector', 'pythonpath')
+[4.067s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/hook/pythonpath.ps1'
+[4.069s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/hook/pythonpath.dsv'
+[4.071s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/hook/pythonpath.sh'
+[4.074s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/bin'
+[4.075s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(spatial_detector)
+[4.075s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/package.ps1'
+[4.078s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/package.dsv'
+[4.080s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/package.sh'
+[4.081s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/package.bash'
+[4.082s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/spatial_detector/package.zsh'
+[4.083s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/share/colcon-core/packages/spatial_detector)
+[4.085s] Level 1:colcon.colcon_core.shell:create_environment_hook('detector', 'pythonpath_develop')
+[4.086s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/build/detector/share/detector/hook/pythonpath_develop.ps1'
+[4.088s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/dev_computer/Desktop/robot_arm_ws/build/detector' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/detector/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/detector/build --no-deps symlink_data
+[4.088s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/build/detector/share/detector/hook/pythonpath_develop.dsv'
+[4.089s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/build/detector/share/detector/hook/pythonpath_develop.sh'
+[4.090s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector' for CMake module files
+[4.091s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector' for CMake config files
+[4.092s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector/lib'
+[4.093s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector/bin'
+[4.093s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector/lib/pkgconfig/detector.pc'
+[4.093s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector/lib/python3.12/site-packages'
+[4.093s] Level 1:colcon.colcon_core.shell:create_environment_hook('detector', 'pythonpath')
+[4.094s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/hook/pythonpath.ps1'
+[4.094s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/hook/pythonpath.dsv'
+[4.095s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/hook/pythonpath.sh'
+[4.096s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector/bin'
+[4.096s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(detector)
+[4.096s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/package.ps1'
+[4.096s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/package.dsv'
+[4.097s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/package.sh'
+[4.098s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/package.bash'
+[4.098s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/detector/package.zsh'
+[4.099s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/dev_computer/Desktop/robot_arm_ws/install/detector/share/colcon-core/packages/detector)
+[4.099s] Level 1:colcon.colcon_core.shell:create_environment_hook('detector_subscriber', 'pythonpath_develop')
+[4.099s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/share/detector_subscriber/hook/pythonpath_develop.ps1'
+[4.100s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/share/detector_subscriber/hook/pythonpath_develop.dsv'
+[4.101s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/share/detector_subscriber/hook/pythonpath_develop.sh'
+[4.101s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/build --no-deps symlink_data
+[4.102s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber' for CMake module files
+[4.102s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber' for CMake config files
+[4.103s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib'
+[4.103s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/bin'
+[4.103s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/pkgconfig/detector_subscriber.pc'
+[4.104s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages'
+[4.104s] Level 1:colcon.colcon_core.shell:create_environment_hook('detector_subscriber', 'pythonpath')
+[4.104s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/hook/pythonpath.ps1'
+[4.105s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/hook/pythonpath.dsv'
+[4.105s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/hook/pythonpath.sh'
+[4.106s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/bin'
+[4.106s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(detector_subscriber)
+[4.106s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/package.ps1'
+[4.107s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/package.dsv'
+[4.107s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/package.sh'
+[4.108s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/package.bash'
+[4.108s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/detector_subscriber/package.zsh'
+[4.109s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/share/colcon-core/packages/detector_subscriber)
+[4.110s] Level 1:colcon.colcon_core.shell:create_environment_hook('controller_joint_test', 'pythonpath_develop')
+[4.110s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/share/controller_joint_test/hook/pythonpath_develop.ps1'
+[4.112s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/share/controller_joint_test/hook/pythonpath_develop.dsv'
+[4.113s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/build --no-deps symlink_data
+[4.113s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/share/controller_joint_test/hook/pythonpath_develop.sh'
+[4.114s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test' for CMake module files
+[4.115s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test' for CMake config files
+[4.115s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib'
+[4.115s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/bin'
+[4.116s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/pkgconfig/controller_joint_test.pc'
+[4.116s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages'
+[4.116s] Level 1:colcon.colcon_core.shell:create_environment_hook('controller_joint_test', 'pythonpath')
+[4.116s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/hook/pythonpath.ps1'
+[4.117s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/hook/pythonpath.dsv'
+[4.117s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/hook/pythonpath.sh'
+[4.118s] Level 1:colcon.colcon_core.environment:checking '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/bin'
+[4.118s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(controller_joint_test)
+[4.119s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/package.ps1'
+[4.119s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/package.dsv'
+[4.120s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/package.sh'
+[4.120s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/package.bash'
+[4.121s] INFO:colcon.colcon_core.shell:Creating package script '/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test/package.zsh'
+[4.122s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/colcon-core/packages/controller_joint_test)
+[4.122s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[4.123s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[4.123s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[4.123s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[4.134s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[4.135s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[4.135s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[4.149s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[4.150s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/dev_computer/Desktop/robot_arm_ws/install/local_setup.ps1'
+[4.151s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/dev_computer/Desktop/robot_arm_ws/install/_local_setup_util_ps1.py'
+[4.154s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/dev_computer/Desktop/robot_arm_ws/install/setup.ps1'
+[4.157s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/dev_computer/Desktop/robot_arm_ws/install/local_setup.sh'
+[4.158s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/dev_computer/Desktop/robot_arm_ws/install/_local_setup_util_sh.py'
+[4.158s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/dev_computer/Desktop/robot_arm_ws/install/setup.sh'
+[4.159s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/dev_computer/Desktop/robot_arm_ws/install/local_setup.bash'
+[4.160s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/dev_computer/Desktop/robot_arm_ws/install/setup.bash'
+[4.162s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/dev_computer/Desktop/robot_arm_ws/install/local_setup.zsh'
+[4.162s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/dev_computer/Desktop/robot_arm_ws/install/setup.zsh'

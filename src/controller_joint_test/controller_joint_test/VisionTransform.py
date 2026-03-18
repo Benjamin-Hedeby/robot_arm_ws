@@ -21,10 +21,10 @@ def transform_camera_to_base(cam_x, cam_y, cam_z, current_joints):
     # This tells us exactly where the wrist is located right now
     T_base_tool = forward_kinematics(current_joints, verbose=False)
     
-    # 3. Define the physical offset of the camera lens relative to the tool flange
-    offset_x = 0.05  # Distance forward/backward (meters)
-    offset_y = 0.00  # Distance left/right (meters)
-    offset_z = 0.03  # Distance up/down (meters)
+    # 3. The physical offset of the camera lens relative to the origin of frame 6.
+    offset_x = 0.00
+    offset_y = 0.051
+    offset_z = 0.06675 
     
     # The camera is facing the exact same direction as the tool flange so no rotation is required
     # We build the static transformation matrix for the camera.

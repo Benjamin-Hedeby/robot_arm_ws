@@ -1,0 +1,24 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector",
+        "/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib/python3.12/site-packages",
+        "/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber",
+        "/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages",
+        "/home/dev_computer/Desktop/robot_arm_ws/build/detector",
+        "/home/dev_computer/Desktop/robot_arm_ws/install/detector/lib/python3.12/site-packages",
+        "/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test",
+        "/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector",
+        "/home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib/python3.12/site-packages",
+        "/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber",
+        "/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages",
+        "/home/dev_computer/Desktop/robot_arm_ws/build/detector",
+        "/home/dev_computer/Desktop/robot_arm_ws/install/detector/lib/python3.12/site-packages",
+        "/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test",
+        "/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ]
+}

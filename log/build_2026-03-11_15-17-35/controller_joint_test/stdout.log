@@ -1,0 +1,23 @@
+running develop
+running egg_info
+creating controller_joint_test.egg-info
+writing controller_joint_test.egg-info/PKG-INFO
+writing dependency_links to controller_joint_test.egg-info/dependency_links.txt
+writing entry points to controller_joint_test.egg-info/entry_points.txt
+writing requirements to controller_joint_test.egg-info/requires.txt
+writing top-level names to controller_joint_test.egg-info/top_level.txt
+writing manifest file 'controller_joint_test.egg-info/SOURCES.txt'
+reading manifest file 'controller_joint_test.egg-info/SOURCES.txt'
+writing manifest file 'controller_joint_test.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages/controller-joint-test.egg-link (link to .)
+Installing controller_joint_test script to /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/controller_joint_test
+Installing live_ik_streamer script to /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/controller_joint_test
+
+Installed /home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test
+running symlink_data
+creating /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/ament_index
+creating /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/ament_index/resource_index
+creating /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/ament_index/resource_index/packages
+symbolically linking /home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/resource/controller_joint_test -> /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/ament_index/resource_index/packages
+symbolically linking /home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/package.xml -> /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/share/controller_joint_test

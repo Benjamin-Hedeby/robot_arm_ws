@@ -1,0 +1,15 @@
+running develop
+running egg_info
+writing spatial_detector.egg-info/PKG-INFO
+writing dependency_links to spatial_detector.egg-info/dependency_links.txt
+writing entry points to spatial_detector.egg-info/entry_points.txt
+writing requirements to spatial_detector.egg-info/requires.txt
+writing top-level names to spatial_detector.egg-info/top_level.txt
+reading manifest file 'spatial_detector.egg-info/SOURCES.txt'
+writing manifest file 'spatial_detector.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib/python3.12/site-packages/spatial-detector.egg-link (link to .)
+Installing spatial_overlay script to /home/dev_computer/Desktop/robot_arm_ws/install/spatial_detector/lib/spatial_detector
+
+Installed /home/dev_computer/Desktop/robot_arm_ws/build/spatial_detector
+running symlink_data

@@ -1,0 +1,18 @@
+[2.318s] Invoking command in '/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/build --no-deps symlink_data
+[2.933s] running develop
+[3.344s] running egg_info
+[3.418s] writing detector_subscriber.egg-info/PKG-INFO
+[3.418s] writing dependency_links to detector_subscriber.egg-info/dependency_links.txt
+[3.418s] writing entry points to detector_subscriber.egg-info/entry_points.txt
+[3.419s] writing requirements to detector_subscriber.egg-info/requires.txt
+[3.419s] writing top-level names to detector_subscriber.egg-info/top_level.txt
+[3.563s] reading manifest file 'detector_subscriber.egg-info/SOURCES.txt'
+[3.564s] writing manifest file 'detector_subscriber.egg-info/SOURCES.txt'
+[3.652s] running build_ext
+[3.652s] Creating /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages/detector-subscriber.egg-link (link to .)
+[3.657s] Installing aruco_visualizer script to /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/detector_subscriber
+[3.658s] Installing spatial_subscriber script to /home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/detector_subscriber
+[3.659s] 
+[3.659s] Installed /home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber
+[3.659s] running symlink_data
+[3.797s] Invoked command in '/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/detector_subscriber/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/detector_subscriber/build --no-deps symlink_data

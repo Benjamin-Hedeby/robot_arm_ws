@@ -1,0 +1,18 @@
+[2.325s] Invoking command in '/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/build --no-deps symlink_data
+[2.929s] running develop
+[3.346s] running egg_info
+[3.421s] writing controller_joint_test.egg-info/PKG-INFO
+[3.421s] writing dependency_links to controller_joint_test.egg-info/dependency_links.txt
+[3.422s] writing entry points to controller_joint_test.egg-info/entry_points.txt
+[3.422s] writing requirements to controller_joint_test.egg-info/requires.txt
+[3.423s] writing top-level names to controller_joint_test.egg-info/top_level.txt
+[3.570s] reading manifest file 'controller_joint_test.egg-info/SOURCES.txt'
+[3.572s] writing manifest file 'controller_joint_test.egg-info/SOURCES.txt'
+[3.646s] running build_ext
+[3.648s] Creating /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages/controller-joint-test.egg-link (link to .)
+[3.650s] Installing controller_joint_test script to /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/controller_joint_test
+[3.650s] Installing live_ik_streamer script to /home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/controller_joint_test
+[3.650s] 
+[3.650s] Installed /home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test
+[3.651s] running symlink_data
+[3.829s] Invoked command in '/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dev_computer/Desktop/robot_arm_ws/install/controller_joint_test/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/dev_computer/Desktop/robot_arm_ws/build/controller_joint_test/build --no-deps symlink_data
