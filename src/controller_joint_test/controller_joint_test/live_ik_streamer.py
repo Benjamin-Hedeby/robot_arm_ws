@@ -46,10 +46,10 @@ class LiveIKStreamer(Node):
             # --- SAFETY SHIELD: JOINT LIMITS ---
             joint_limits = [
                 [-3.12, 3.12],         # Joint 1 (Base)
-                [-1.05, 1.92],         # Joint 2 (Shoulder)
+                [-1.05, 1.95],         # Joint 2 (Shoulder)
                 [-2.27, 2.27],         # Joint 3 (Elbow)
                 [-2.09, 2.09],         # Joint 4 (Wrist 1)
-                [-2.09, 2.09]          # Joint 5 (Wrist 2)
+                [-2.0, 2.0]          # Joint 5 (Wrist 2)
             ]
             
             # Check the first 5 physical joints against their limits
