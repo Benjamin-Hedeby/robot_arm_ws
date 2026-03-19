@@ -94,7 +94,7 @@ class PBVSTaskController(Node):
             if not self.initial_pose_recorded:
                 self.start_x = 0.045
                 self.start_y = 0.000
-                self.start_z = 0.640
+                self.start_z = 0.837
                 self.start_roll = 0.0
                 self.start_yaw = math.pi
                 
@@ -102,9 +102,9 @@ class PBVSTaskController(Node):
                 self.get_logger().info("Starting smooth 6D interpolation to SCANNING pose...")
             
             # 2. Define exactly where we want to end up (The scanning pose)
-            target_x = 0.300
-            target_y = 0.000
-            target_z = 0.300
+            target_x = 0.5
+            target_y = 0.0
+            target_z = 0.1
             target_roll = math.pi
             target_yaw = 0.0
             
@@ -229,7 +229,7 @@ class PBVSTaskController(Node):
                    
         elif self.state == RobotState.DONE:
             # Pull the arm straight back up to a safe position
-            self.publish_target(0.2, 0.0, 0.3)
+            self.publish_target(0.4, 0.0, 0.1)
             self.get_logger().info("Task complete. Waiting in safe position.", throttle_duration_sec=2.0)
             self.latest_cam_weed_pos = None
 

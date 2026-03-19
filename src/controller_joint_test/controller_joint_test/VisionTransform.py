@@ -24,7 +24,7 @@ def transform_camera_to_base(cam_x, cam_y, cam_z, current_joints):
     # 3. The physical offset of the camera lens relative to the origin of frame 6.
     offset_x = 0.00
     offset_y = 0.051
-    offset_z = 0.06675 
+    offset_z = -0.136 
     
     # The camera is facing the exact same direction as the tool flange so no rotation is required
     # We build the static transformation matrix for the camera.
@@ -46,7 +46,7 @@ def transform_camera_to_base(cam_x, cam_y, cam_z, current_joints):
 
 # --- TESTING ---
 if __name__ == "__main__":
-    # Test scenario: The robot is pointing straight down at the table
+    # Test scenario: 
     test_joints = [0.0, np.pi/4, np.pi/4, 0.0, -np.pi/2, 0.0]
     
     # Simulated output from YOLO + Depth sensor (The weed is 40 cm straight ahead from the lens)
