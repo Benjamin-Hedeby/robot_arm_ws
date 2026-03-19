@@ -74,10 +74,18 @@ def generate_launch_description():
         }.items()
     )
 
+    start_overlay_cmd = Node(
+        package='spatial_detector',
+        executable='spatial_overlay',
+        name='spatial_overlay',
+        output='screen'
+    )
+
     # ================== 4. Return Everything ==================
     return LaunchDescription([
         start_rsp_cmd,
-        start_jsp_cmd,
+        #start_jsp_cmd,
         start_rviz_cmd,
-        start_camera_cmd
+        start_camera_cmd,
+        start_overlay_cmd
     ])

@@ -25,7 +25,9 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[{'robot_description': robot_description_content}]
+        parameters=[{'robot_description': robot_description_content}],
+
+        remappings=[('/robot_description', '/arm_description')]
     )
 
     # 4. RViz Node
@@ -45,5 +47,5 @@ def generate_launch_description():
     return LaunchDescription([
         start_rsp_cmd,
         start_rviz_cmd,
-        start_joint_state_publisher_cmd
+        #start_joint_state_publisher_cmd
     ])
