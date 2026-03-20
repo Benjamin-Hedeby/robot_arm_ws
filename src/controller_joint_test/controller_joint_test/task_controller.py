@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, String
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import JointState
 from enum import Enum
@@ -18,6 +18,7 @@ class RobotState(Enum):
     APPROACHING = 2
     WEEDING = 3
     DONE = 4
+    DYNAMIC_APPROACHING = 5
 
 class PBVSTaskController(Node):
     def __init__(self):
@@ -53,6 +54,9 @@ class PBVSTaskController(Node):
             self.vision_callback,
             10
         )
+
+        # 4. PUBLISHER: Send command to gripper
+        self.gripper_command = self.create_publisher(String, '/gripper_open_close_cmd', 10)
         
         # The main control loop running at 10 Hz (0.1 seconds) for smooth visual servoing
         self.timer = self.create_timer(0.1, self.control_loop)
@@ -94,21 +98,28 @@ class PBVSTaskController(Node):
             if not self.initial_pose_recorded:
                 self.start_x = 0.045
                 self.start_y = 0.000
-                self.start_z = 0.640
-                self.start_roll = 0.0
-                self.start_yaw = math.pi
+                self.start_z = 0.837
+                self.start_roll = math.pi
+                self.start_pitch = -math.pi
+                self.start_yaw = 0.0
                 
+                # Open the gripper at startup:
+                gripper_state = String()
+                gripper_state.data = 'open'
+                self.gripper_command.publish(gripper_state)
+
                 self.initial_pose_recorded = True
                 self.get_logger().info("Starting smooth 6D interpolation to SCANNING pose...")
             
             # 2. Define exactly where we want to end up (The scanning pose)
-            target_x = 0.300
-            target_y = 0.000
-            target_z = 0.300
+            target_x = 0.5
+            target_y = 0.0
+            target_z = -0.1
             target_roll = math.pi
+            target_pitch = 0.0
             target_yaw = 0.0
             
-            startup_duration = 5.0  # Take exactly 5 seconds to complete the move
+            startup_duration = 8.0  # Take exactly 8 seconds to complete the move
             
             # 3. Calculate a progress percentage from 0.0 to 1.0
             progress = elapsed_time / startup_duration
@@ -128,12 +139,13 @@ class PBVSTaskController(Node):
             current_z = self.start_z + (target_z - self.start_z) * progress
             
             current_roll = self.start_roll + (target_roll - self.start_roll) * progress
+            current_pitch = self.start_pitch + (target_pitch - self.start_pitch) * progress
             current_yaw = self.start_yaw + (target_yaw - self.start_yaw) * progress
             
             # Stream the smoothly changing coordinates and orientation
             self.publish_target(
                 current_x, current_y, current_z, 
-                roll=current_roll, yaw=current_yaw
+                roll=current_roll, pitch=current_pitch, yaw=current_yaw
             )
 
         elif self.state == RobotState.SCANNING:
@@ -141,8 +153,57 @@ class PBVSTaskController(Node):
                 self.get_logger().info("WEED DETECTED! Switching state: APPROACHING.")
                 self.state = RobotState.APPROACHING
                 self.state_start_time = current_time
-                
+
         elif self.state == RobotState.APPROACHING:
+            # LOOK-THEN-MOVE LOGIC
+            # --- PHASE 1: THE "LOOK" ---
+            # Lock the target coordinate
+            if self.locked_weed_base_pos is None:
+                if self.latest_cam_weed_pos is None:
+                    self.get_logger().warn("Waiting for camera data before moving...", throttle_duration_sec=2.0)
+                    return
+                # Transform camera pixels to base coordinates
+                cam_x, cam_y, cam_z = self.latest_cam_weed_pos
+                self.locked_weed_base_pos = transform_camera_to_base(cam_x, cam_y, cam_z, self.current_joints)
+                
+                # Calculate where the end-effector is right now (the start of the move)
+                actual_ee_matrix = forward_kinematics(self.current_joints)
+                self.approach_start_x = actual_ee_matrix[0, 3]
+                self.approach_start_y = actual_ee_matrix[1, 3]
+                self.approach_start_z = actual_ee_matrix[2, 3]
+                
+                self.get_logger().info(f"Target locked at Base Pos: [{self.locked_weed_base_pos[0]:.3f}, {self.locked_weed_base_pos[1]:.3f}, {self.locked_weed_base_pos[2]:.3f}]")
+                self.get_logger().info("Starting 'blind' move to hover position.")
+
+            # --- PHASE 2: THE "MOVE" ---
+            # Hover 15 cm directly above the weed
+            target_x = self.locked_weed_base_pos[0]
+            target_y = self.locked_weed_base_pos[1]
+            target_z = self.locked_weed_base_pos[2] + 0.15
+            
+            approach_duration = 8.0
+            progress = elapsed_time / approach_duration
+            
+            if progress <= 1.0:
+                # Cartesian Path Planner: Interpolate smoothly to the target
+                current_x = self.approach_start_x + (target_x - self.approach_start_x) * progress
+                current_y = self.approach_start_y + (target_y - self.approach_start_y) * progress
+                current_z = self.approach_start_z + (target_z - self.approach_start_z) * progress
+                
+                # Orientation remains pointing straight down (handled by default in publish_target)
+                self.publish_target(current_x, current_y, current_z)
+            else:
+                # Hover point reached
+                self.publish_target(target_x, target_y, target_z)
+                self.get_logger().info("Hover position reached. Switching to WEEDING.")
+                
+                # Record the Z-height for the weeding plunge
+                self.weeding_start_z = target_z
+                
+                self.state = RobotState.WEEDING
+                self.state_start_time = current_time
+
+        elif self.state == RobotState.DYNAMIC_APPROACHING:
             # PBVS DYNAMIC LOOK-AND-MOVE LOGIC
             if self.latest_cam_weed_pos is None:
                 self.get_logger().warn("Lost sight of weed! Pausing...", throttle_duration_sec=2.0)
@@ -206,7 +267,7 @@ class PBVSTaskController(Node):
             target_y = self.locked_weed_base_pos[1]
             target_z = self.locked_weed_base_pos[2] - 0.04 # Plunge 4 cm below the plant
             
-            plunge_duration = 2.0  # Take exactly 2 seconds to plunge down smoothly
+            plunge_duration = 5.0  # Take exactly 5.0 seconds to plunge down smoothly
             progress = elapsed_time / plunge_duration
             
             if progress <= 1.0:
@@ -219,17 +280,20 @@ class PBVSTaskController(Node):
                 # We have reached the bottom! Hold the position
                 self.publish_target(target_x, target_y, target_z)
 
-            # TODO: Close the gripper here!
+            # Close the gripper:
+            gripper_state = String()
+            gripper_state.data = 'open'
+            self.gripper_command.publish(gripper_state)
 
             # Wait 1.5 seconds for the gripper physical mechanism to close
-            if elapsed_time > (plunge_duration + 1.5):
+            if elapsed_time > (plunge_duration + 5.0):
                 self.get_logger().info("Weed grabbed! Switching to DONE.")
                 self.state = RobotState.DONE
                 self.state_start_time = current_time          
                    
         elif self.state == RobotState.DONE:
             # Pull the arm straight back up to a safe position
-            self.publish_target(0.2, 0.0, 0.3)
+            self.publish_target(0.5, 0.0, -0.1)
             self.get_logger().info("Task complete. Waiting in safe position.", throttle_duration_sec=2.0)
             self.latest_cam_weed_pos = None
 

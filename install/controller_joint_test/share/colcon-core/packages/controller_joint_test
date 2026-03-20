@@ -1,1 +1,1 @@
-geometry_msgs:numpy:rclpy:scipy:sensor_msgs:trajectory_msgs
+control_msgs:geometry_msgs:numpy:rclpy:scipy:sensor_msgs:std_msgs:trajectory_msgs:vision_msgs
