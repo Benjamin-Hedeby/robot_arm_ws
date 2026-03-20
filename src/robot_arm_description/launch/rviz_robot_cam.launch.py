@@ -81,11 +81,19 @@ def generate_launch_description():
         output='screen'
     )
 
+    start_detection_republisher_cmd = Node(
+        package='controller_joint_test',
+        executable='detections_republish',
+        name='detections_republish',
+        output='screen'
+    )
+
     # ================== 4. Return Everything ==================
     return LaunchDescription([
         start_rsp_cmd,
         #start_jsp_cmd,
         start_rviz_cmd,
         start_camera_cmd,
-        start_overlay_cmd
+        start_overlay_cmd,
+        start_detection_republisher_cmd
     ])

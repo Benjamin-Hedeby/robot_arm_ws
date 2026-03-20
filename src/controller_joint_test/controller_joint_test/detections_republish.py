@@ -13,8 +13,6 @@ class DetectionsRepublishNode(Node):
         # Publisher: Republish x, y, z if score is high enough
         self.detection_republish = self.create_publisher(Point, '/weed_location_cam_frame', 10)
 
-
-
     def detection_callback(self, msg):
 
         if len(msg.detections) == 0:
