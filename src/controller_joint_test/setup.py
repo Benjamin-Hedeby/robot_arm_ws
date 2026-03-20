@@ -27,12 +27,8 @@ setup(
             'controller_joint_test = controller_joint_test.controller_joint_test:main',
             'live_ik_streamer = controller_joint_test.live_ik_streamer:main',
             'detections_republish = controller_joint_test.detections_republish:main',
-<<<<<<< HEAD
             'task_controller = controller_joint_test.task_controller:main',
             'gripper_controller = controller_joint_test.gripper_controller:main'
-=======
-            'task_controller = controller_joint_test.task_controller:main'
->>>>>>> 3b5af63f91f63bb690c3d5c73cb3be563e4146b7
         ],
     },
 )
