@@ -28,7 +28,10 @@ setup(
             'live_ik_streamer = controller_joint_test.live_ik_streamer:main',
             'detections_republish = controller_joint_test.detections_republish:main',
             'task_controller = controller_joint_test.task_controller:main',
-            'gripper_controller = controller_joint_test.gripper_controller:main'
+            'gripper_controller = controller_joint_test.gripper_controller:main',
+            'rviz_translator = controller_joint_test.rviz_translator:main',
+            'orange_detections = controller_joint_test.orange_detections:main',
+            'detections_republish_orange = controller_joint_test.detections_republish_orange:main',
         ],
     },
 )

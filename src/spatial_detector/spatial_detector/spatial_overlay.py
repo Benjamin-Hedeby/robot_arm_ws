@@ -52,16 +52,16 @@ class SpatialOverlay(Node):
     def caminfo_cb(self, msg: CameraInfo):
         self.fx, self.fy = msg.k[0], msg.k[4]
         self.cx, self.cy = msg.k[2], msg.k[5]
-        self.get_logger().info(
-            f'Intrinsics fx={self.fx:.1f}, fy={self.fy:.1f}, '
-            f'cx={self.cx:.1f}, cy={self.cy:.1f}'
-        )
+        # self.get_logger().info(
+        #     f'Intrinsics fx={self.fx:.1f}, fy={self.fy:.1f}, '
+        #     f'cx={self.cx:.1f}, cy={self.cy:.1f}'
+        # )
 
     def dets_cb(self, msg: Detection3DArray):
         # Store detections
         self.detections = msg.detections
         cnt = len(self.detections)
-        self.get_logger().info(f'[dets_cb] got {cnt} detections')
+        # self.get_logger().info(f'[dets_cb] got {cnt} detections')
 
         # 1) RViz sphere markers
         ma = MarkerArray()
@@ -143,7 +143,7 @@ class SpatialOverlay(Node):
             out = self.bridge.cv2_to_imgmsg(overlay, 'bgr8')
             out.header = msg.header
             self.img_pub.publish(out)
-            self.get_logger().info(f'[image_cb] published w/ {len(self.detections)} dets')
+            # self.get_logger().info(f'[image_cb] published w/ {len(self.detections)} dets')
         except CvBridgeError as e:
             self.get_logger().error(f'Publish failed: {e}')
 

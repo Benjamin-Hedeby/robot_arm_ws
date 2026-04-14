@@ -1,8 +1,9 @@
 /oak:
   ros__parameters:
     camera:
+      i_enable_nn: false 
       i_pipeline_type: RGBD           
-      i_nn_type: spatial          
+      i_nn_type: none          
       i_enable_imu: true  
       i_publish_tf_from_calibration: false
       i_external_calibration_path: "/mnt/hgfs/VMware_ubuntu/robot_arm_ws/src/robot_arm_description/params/custom_calib.json"
@@ -22,17 +23,17 @@
       i_subpixel: true                # Better accuracy
       i_depth_filter_size: 5          # Smooths out noise
 
-    nn:
-      i_nn_config_path: "/mnt/hgfs/VMware_ubuntu/robot_arm_ws/src/robot_arm_description/params/yolo8s.json"
-      i_blob_path: "/mnt/hgfs/VMware_ubuntu/robot_arm_ws/src/robot_arm_description/params/yolo8s_openvino_2022.1_5shave.blob"
-      i_num_shaves: 5             
-      i_disable_resize: true
+    # nn:
+    #   i_nn_config_path: "/mnt/hgfs/VMware_ubuntu/robot_arm_ws/src/robot_arm_description/params/yolo8s.json"
+    #   i_blob_path: "/mnt/hgfs/VMware_ubuntu/robot_arm_ws/src/robot_arm_description/params/yolo8s_openvino_2022.1_5shave.blob"
+    #   i_num_shaves: 5             
+    #   i_disable_resize: true
 
-      spatial_network_configuration:
-         i_bb_scale_factor: 0.5         # Measure depth in the center 50% of the box
-         i_depth_threshold_lower: 100   # Ignore things closer than 10cm
-         i_depth_threshold_upper: 10000 # Ignore things further than 10m
-         i_calc_algo: "MEDIAN"
+    #   spatial_network_configuration:
+    #      i_bb_scale_factor: 0.5         # Measure depth in the center 50% of the box
+    #      i_depth_threshold_lower: 100   # Ignore things closer than 10cm
+    #      i_depth_threshold_upper: 10000 # Ignore things further than 10m
+    #      i_calc_algo: "MEDIAN"
     
     imu:
       i_acc_freq: 400          # Accelerometer Hz (400 is standard)
