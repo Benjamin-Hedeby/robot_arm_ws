@@ -197,4 +197,4 @@ if __name__ == "__main__":
 
     print("--- Calculated Joint Angles (Theta) ---")
     print(f"theta1 = {joints[0]:.2f}, theta2 = {joints[1]:.2f}, theta3 = {joints[2]:.2f}, theta4 = {joints[3]:.2f}, theta5 = {joints[4]:.2f}, theta6 = {joints[5]:.2f}")
-    print(f"{joints[0]:.3f}, {joints[1]:.3f}, {joints[2]:.3f}, {joints[3]:.3f}, {joints[4]:.3f}, {joints[5]:.3f}")
+    # print(f"{joints[0]:.3f}, {joints[1]:.3f}, {joints[2]:.3f}, {joints[3]:.3f}, {joints[4]:.3f}, {joints[5]:.3f}")

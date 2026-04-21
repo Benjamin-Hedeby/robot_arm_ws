@@ -29,7 +29,7 @@ def get_modified_dh_matrix(alpha, a, d, theta):
     
     return T
 
-def forward_kinematics(joints, verbose=False):
+def forward_kinematics(joints, return_skeleton=False, verbose=False):
     """
     Computes the End-Effector position and orientation based on joint angles.
 
@@ -54,6 +54,7 @@ def forward_kinematics(joints, verbose=False):
 
     # Initialize the total transformation as an Identity Matrix (4x4)
     T_total = np.eye(4)
+    skeleton_points = []
 
     if verbose:
         print("-" * 30)
@@ -65,6 +66,7 @@ def forward_kinematics(joints, verbose=False):
         a = params[1]
         d = params[2]
         theta = joints[i]
+
         # Convert from physical motor angle q to mathematical DH angle theta
         if i == 0:
             theta = -theta
@@ -72,19 +74,25 @@ def forward_kinematics(joints, verbose=False):
             theta = -theta + pi/2
         elif i == 2:
             theta = theta + pi/2
-
-        # Calculate transformation for current link
+           # Calculate transformation for current link
         T_i = get_modified_dh_matrix(alpha, a, d, theta)
 
         # Multiply to the chain: T_total = T_total * T_i
         T_total = np.dot(T_total, T_i)
+
+        joint_position = T_total[:3, 3]
+        skeleton_points.append(joint_position)
 
         # Print position of each joint frame if debugging is enabled
         if verbose:
             pos = T_total[:3, 3]
             print(f"Frame {i + 1} pos: [{pos[0]:.4f}, {pos[1]:.4f}, {pos[2]:.4f}]")
 
-    return T_total
+    if return_skeleton:
+        return T_total, skeleton_points
+    else:
+        return T_total
+
 
 def rotation_matrix_to_fixed_angles(T):
     """
@@ -99,13 +107,13 @@ def rotation_matrix_to_fixed_angles(T):
 
     if not singular:
         # Standard analytical solution
-        gamma = np.atan2(T[2, 1], T[2, 2])
-        beta = np.atan2(-T[2, 0], sy)
-        alpha = np.atan2(T[1, 0], T[0, 0])
+        gamma = np.arctan2(T[2, 1], T[2, 2])
+        beta = np.arctan2(-T[2, 0], sy)
+        alpha = np.arctan2(T[1, 0], T[0, 0])
     else:
         # Singularity handling: The robot is pointing straight up or down
-        gamma = np.atan2(-T[1, 2], T[1, 1])
-        beta = np.atan2(-T[2, 0], sy)
+        gamma = np.arctan2(-T[1, 2], T[1, 1])
+        beta = np.arctan2(-T[2, 0], sy)
         alpha = 0
 
     # Convert radians to degrees for readability

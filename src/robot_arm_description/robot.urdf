@@ -817,7 +817,7 @@
     <origin xyz="0.341 0 0" rpy="0 -1.5708 0"/>
     <parent link="link_3"/>
     <child link="link_4"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
   <!-- Joint from link_2 to link_3 -->
@@ -841,7 +841,7 @@
     <origin xyz="0.148 0.15 0.309" rpy="3.14159 0 -0.63581"/>
     <parent link="link_0"/>
     <child link="link_1"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
 </robot>

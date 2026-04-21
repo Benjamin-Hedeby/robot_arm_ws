@@ -1,9 +1,0 @@
-source;share/detector_subscriber/hook/pythonpath.ps1
-source;share/detector_subscriber/hook/pythonpath.dsv
-source;share/detector_subscriber/hook/pythonpath.sh
-source;share/detector_subscriber/hook/ament_prefix_path.ps1
-source;share/detector_subscriber/hook/ament_prefix_path.dsv
-source;share/detector_subscriber/hook/ament_prefix_path.sh
-source;../../build/detector_subscriber/share/detector_subscriber/hook/pythonpath_develop.ps1
-source;../../build/detector_subscriber/share/detector_subscriber/hook/pythonpath_develop.dsv
-source;../../build/detector_subscriber/share/detector_subscriber/hook/pythonpath_develop.sh

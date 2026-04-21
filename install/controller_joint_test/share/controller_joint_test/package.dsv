@@ -1,9 +1,0 @@
-source;share/controller_joint_test/hook/pythonpath.ps1
-source;share/controller_joint_test/hook/pythonpath.dsv
-source;share/controller_joint_test/hook/pythonpath.sh
-source;share/controller_joint_test/hook/ament_prefix_path.ps1
-source;share/controller_joint_test/hook/ament_prefix_path.dsv
-source;share/controller_joint_test/hook/ament_prefix_path.sh
-source;../../build/controller_joint_test/share/controller_joint_test/hook/pythonpath_develop.ps1
-source;../../build/controller_joint_test/share/controller_joint_test/hook/pythonpath_develop.dsv
-source;../../build/controller_joint_test/share/controller_joint_test/hook/pythonpath_develop.sh

@@ -66,8 +66,19 @@ def generate_launch_description():
         ),
         launch_arguments={
             'name': 'oak',
-            'parent_frame': 'oak_d_s2',     # Glues camera to your URDF
-            'publish_urdf': 'false',        # Stops it from overwriting your arm!
+            'parent_frame': 'oak_d_s2',   
+
+            # --- TRANSLATION (in meters) ---
+            'cam_pos_x': '0.0',
+            'cam_pos_y': '0.0',
+            'cam_pos_z': '-0.02307',
+            
+            # --- ROTATION (in radians) ---
+            'cam_roll': '1.5708',  # Example: 90 degrees roll
+            'cam_pitch': '1.5708', 
+            'cam_yaw': '0.0',
+
+            'publish_urdf': 'true',      
             'use_urdf': 'false', 
             'publish_tf': 'false',
             'params_file': camera_config_path
@@ -81,11 +92,19 @@ def generate_launch_description():
         output='screen'
     )
 
+    start_detection_republisher_cmd = Node(
+        package='controller_joint_test',
+        executable='detections_republish',
+        name='detections_republish',
+        output='screen'
+    )
+
     # ================== 4. Return Everything ==================
     return LaunchDescription([
         start_rsp_cmd,
-        #start_jsp_cmd,
+        # start_jsp_cmd,
         start_rviz_cmd,
         start_camera_cmd,
-        start_overlay_cmd
+        start_overlay_cmd,
+        # start_detection_republisher_cmd
     ])
