@@ -45,11 +45,11 @@ def forward_kinematics(joints, return_skeleton=False, verbose=False):
     # Note: Units are in METERS
     dh_table = [
         [0,       0,      0],        # Frame 1
-        [pi / 2,  0.045,  0],        # Frame 2
+        [pi / 2,  0.040,  0],        # Frame 2
         [0,       0.300,  0],        # Frame 3
-        [pi / 2,  0.000,  0.334],    # Frame 4
+        [pi / 2,  0.000,  0.380],    # Frame 4
         [-pi / 2, 0,      0],        # Frame 5
-        [pi / 2,  0,      0.2028]     # Frame 6 (End-Effector)
+        [pi / 2,  0,      0.201]     # Frame 6 (End-Effector)
     ]
 
     # Initialize the total transformation as an Identity Matrix (4x4)

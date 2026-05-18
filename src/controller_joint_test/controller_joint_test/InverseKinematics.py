@@ -3,9 +3,9 @@ from math import cos, sin, pi
 
 def inverse_kinematics(position, orientation):
 
-    a_1 = 0.045
+    a_1 = 0.040 # Changed from 0.045
     a_2 = 0.300
-    d_4 = 0.334
+    d_4 = 0.380 # Changed from 0.334
     x_ee, y_ee, z_ee = position         # End-effector position
     gamma, beta, alpha = orientation    # End-effector orientation (X-Y-Z fixed angles)
 
@@ -14,7 +14,7 @@ def inverse_kinematics(position, orientation):
 
     # Calculate the Wrist Center (P_wc)
     # d6 is the distance from the wrist center (intersection of Z4, Z5, Z6) to the end-effector.
-    d6 = 0.2028
+    d6 = 0.201 # 0.061 is the marker offset
 
     # The Z-axis of the end-effector in the base frame is the 3rd column of R_0_6
     Z_ee = R_0_6[:, 2]
@@ -59,7 +59,7 @@ def inverse_kinematics(position, orientation):
     neg_root = -pos_root
 
     # Check for singularity (Gimbal Lock) where sin(beta) is approx 0
-    if abs(pos_root) < 1e-6:
+    if abs(pos_root) < 0.05:
         # We arbitrarily set theta_4 to 0.0 and let theta_6 do the rotation
         theta4 = 0.0
 
@@ -188,10 +188,10 @@ def get_R_0_4_eval_zero(theta1, theta2, theta3):
 
 if __name__ == "__main__":
 
-    x,y,z = [0.345, 0.0, 0.537]
+    x,y,z = [0.045,0.0,0.837]
     position = [x,y,z]
     alpha = np.arctan2(y,x)
-    orientation = [0, 0, np.pi]
+    orientation = [np.pi,-np.pi,alpha]
 
     joints = inverse_kinematics(position, orientation)
 
