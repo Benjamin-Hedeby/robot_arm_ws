@@ -1,7 +1,6 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
-import numpy as np
 
 # Import your validated IK function
 from .InverseKinematics import inverse_kinematics
@@ -45,11 +44,11 @@ class LiveIKStreamer(Node):
 
             # --- SAFETY SHIELD: JOINT LIMITS ---
             joint_limits = [
-                [-0.3, 3.12],         # Joint 1 (Base)
+                [-0.3, 3.12],          # Joint 1 (Base)
                 [-1.05, 1.95],         # Joint 2 (Shoulder)
-                [-2.1, 2.1],         # Joint 3 (Elbow)
+                [-2.0, 2.0],           # Joint 3 (Elbow)
                 [-2.09, 2.09],         # Joint 4 (Wrist 1)
-                [-2.0, 2.0]          # Joint 5 (Wrist 2)
+                [-2.0, 2.0]            # Joint 5 (Wrist 2)
             ]
             
             # Check the first 5 physical joints against their limits
@@ -68,14 +67,14 @@ class LiveIKStreamer(Node):
                 return 
             # -----------------------------------
             
-            # Print the result to the terminal!
-            self.get_logger().info(f"SUCCESS! Calculated Joint Angles: {[round(j, 3) for j in joints]}", throttle_duration_sec=2.0)
+            # Print the result to the terminal
+            #self.get_logger().info(f"Calculated Joint Angles: {[round(j, 3) for j in joints]}", throttle_duration_sec=2.0)
 
             # Changed from 6DOF to 5DOF:
             physical_joints = joints[:5]
+            physical_joints[4] = physical_joints[4] + 0.05
             
-            # Round to 4 decimal places to prevent scientific notation (e-18)
-            # from crashing the hardware controllers.
+            # Round to 4 decimal places to prevent scientific notation (e-18) from crashing the hardware controllers.
             cleaned_joints = [round(float(j), 4) for j in physical_joints]
             
             # If a number is just negative zero (-0.0), force it to absolute 0.0

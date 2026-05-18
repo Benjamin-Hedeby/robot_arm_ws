@@ -14,7 +14,7 @@ def inverse_kinematics(position, orientation):
 
     # Calculate the Wrist Center (P_wc)
     # d6 is the distance from the wrist center (intersection of Z4, Z5, Z6) to the end-effector.
-    d6 = 0.201 # 0.061 is the marker offset
+    d6 = 0.2028 #0.115
 
     # The Z-axis of the end-effector in the base frame is the 3rd column of R_0_6
     Z_ee = R_0_6[:, 2]

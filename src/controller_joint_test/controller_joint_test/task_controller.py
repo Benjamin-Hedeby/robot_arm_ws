@@ -11,16 +11,18 @@ from .VisionTransform import transform_camera_to_base
 from .ForwardKinematics import forward_kinematics
 
 class RobotState(Enum):
-    STARTUP_INTERPOLATION = 0
-    STARTUP_SIMPLE = 1
+    STARTUP = 1
     SCANNING = 2
     APPROACHING = 3
-    WEEDING = 4
-    DONE = 5
-    DYNAMIC_APPROACHING = 6
-    PAUSE = 7
-    SIMPLE_APPROACHING = 8
-    FIRST_SCAN = 9
+    CENTERING_XY = 4
+    SECOND_SCAN = 5
+    PLUNGING = 6
+    GRASPING = 7
+    WEEDING = 8
+    DONE = 9
+    DYNAMIC_APPROACHING = 10
+    PAUSE = 11
+
 
 class PBVSTaskController(Node):
     def __init__(self):
@@ -30,7 +32,20 @@ class PBVSTaskController(Node):
         self.initial_pose_recorded = False
         self.start_scanning = False
         self.state_start_time = time.time()
-        self.state = RobotState.STARTUP_SIMPLE
+        self.state = RobotState.STARTUP
+
+        # --- TUNABLE PARAMETERS (Configuration) ---
+        # The acceptable 3D Euclidean error (in meters) to consider a target reached
+        self.target_tolerance_m = 0.01
+        
+        # The vertical distance (in meters) to hover above the weed before plunging
+        self.hover_offset_z_m = 0.10
+
+        # The vertical distance (in meters) to plunge into the ground
+        self.plunge_depth_m = 0.04
+        
+        # The default speed of the TCP for interpolated movements
+        self.tcp_speed_m_s = 0.08
 
         # Variables to store the latest incoming data
         self.current_joints = None       # Will hold [q_1,..., q_5] from the motor encoders
@@ -96,91 +111,35 @@ class PBVSTaskController(Node):
         current_time = time.time()
         elapsed_time = current_time - self.state_start_time
         
-        if self.state == RobotState.STARTUP_SIMPLE:
+        if self.state == RobotState.STARTUP:
             if not self.initial_pose_recorded:
                 # Open the gripper at startup:
                 self.set_gripper('open')
                 
                 # Define the scanning pose
-                self.target_x = 0.5
-                self.target_y = 0.0
-                self.target_z = 0.1
+                self.scan_x = 0.5
+                self.scan_y = 0.0
+                self.scan_z = 0.1
                 target_roll = math.pi
                 target_pitch = 0.0
                 target_yaw = 0.0
             
                 self.publish_target(
-                    self.target_x, self.target_y, self.target_z, 
+                    self.scan_x, self.scan_y, self.scan_z, 
                     roll=target_roll, pitch=target_pitch, yaw=target_yaw
                 )
 
                 self.initial_pose_recorded = True
 
             # Calculate where the end-effector is right now
-            actual_x, actual_y, actual_z = self.get_current_tcp()
-
-            error = abs(self.target_x-actual_x) + abs(self.target_y-actual_y) + abs(self.target_z - actual_z)
+            actual_pos = self.get_current_tcp()
+            error = self.calculate_tcp_error([self.scan_x, self.scan_y , self.scan_z], actual_pos)
                 
             # 4. Switch to SCANNING when scanning pose is reached
-            if error <= 0.05:
-                self.get_logger().info("Reached scan position! Starting sweep.")
-                self.state = RobotState.SCANNING
-                self.state_start_time = current_time
+            if error <= self.target_tolerance_m:
+                self.switch_state(RobotState.SCANNING)
                 self.latest_cam_weed_pos = None  # Clear any old camera noise
                 return
-
-        if self.state == RobotState.STARTUP_INTERPOLATION:
-            # 1. Record the known mechanical Home pose
-            if not self.initial_pose_recorded:
-                self.start_x = 0.045
-                self.start_y = 0.000
-                self.start_z = 0.837
-                self.start_roll = math.pi
-                self.start_pitch = -math.pi
-                self.start_yaw = 0.0
-                
-                # Open the gripper at startup:
-                self.set_gripper('open')
-
-                self.initial_pose_recorded = True
-                self.get_logger().info("Starting smooth interpolation to SCANNING pose...")
-            
-            # 2. Define the scanning pose
-            target_x = 0.5
-            target_y = 0.0
-            target_z = 0.1
-            target_roll = math.pi
-            target_pitch = 0.0
-            target_yaw = 0.0
-            
-            startup_duration = 5.0
-            
-            # 3. Calculate a progress percentage from 0.0 to 1.0
-            progress = elapsed_time / startup_duration
-            
-            # 4. Switch to SCANNING when scanning pose is reached
-            if progress >= 1.0:
-                progress = 1.0
-                self.get_logger().info("Reached scan position! Starting sweep.")
-                self.state = RobotState.SCANNING
-                self.state_start_time = current_time
-                self.latest_cam_weed_pos = None  # Clear any old camera noise
-                return
-                
-            # 5. Linear Interpolation for XYZ and Angles
-            current_x = self.start_x + (target_x - self.start_x) * progress
-            current_y = self.start_y + (target_y - self.start_y) * progress
-            current_z = self.start_z + (target_z - self.start_z) * progress
-            
-            current_roll = self.start_roll + (target_roll - self.start_roll) * progress
-            current_pitch = self.start_pitch + (target_pitch - self.start_pitch) * progress
-            current_yaw = self.start_yaw + (target_yaw - self.start_yaw) * progress
-            
-            # Stream the smoothly changing coordinates and orientation
-            self.publish_target(
-                current_x, current_y, current_z, 
-                roll=current_roll, pitch=current_pitch, yaw=current_yaw
-            )
 
         elif self.state == RobotState.SCANNING:
             if not self.start_scanning:
@@ -190,12 +149,11 @@ class PBVSTaskController(Node):
                 self.vision_command.publish(vision_detection)
                 self.start_scanning = True
             if self.latest_cam_weed_pos is not None:
-                self.get_logger().info("WEED DETECTED! Switching state: APPROACHING.")
-                self.state = RobotState.APPROACHING
-                self.state_start_time = current_time
+                self.switch_state(RobotState.CENTERING_XY)
 
-        elif self.state == RobotState.SIMPLE_APPROACHING:
+        elif self.state == RobotState.CENTERING_XY:
             # LOOK-THEN-MOVE LOGIC
+            # --- PHASE 1: THE "LOOK" ---
             # Lock the target coordinate
             if self.locked_weed_base_pos is None:
                 if self.latest_cam_weed_pos is None:
@@ -205,29 +163,48 @@ class PBVSTaskController(Node):
                 cam_x, cam_y, cam_z = self.latest_cam_weed_pos
                 self.locked_weed_base_pos = transform_camera_to_base(cam_x, cam_y, cam_z, self.current_joints)
                 
+                # Calculate where the end-effector is right now (the start of the move)
+                self.approach_start_x, self.approach_start_y, self.approach_start_z = self.get_current_tcp()
+                
                 self.get_logger().info(f"Target locked at Base Pos: [{self.locked_weed_base_pos[0]:.3f}, {self.locked_weed_base_pos[1]:.3f}, {self.locked_weed_base_pos[2]:.3f}]")
                 self.get_logger().info("Starting 'blind' move to hover position.")
-                # Hover above the weed
-                self.target_x = self.locked_weed_base_pos[0]
-                self.target_y = self.locked_weed_base_pos[1] 
-                self.target_z = self.locked_weed_base_pos[2] + 0.15
-                self.publish_target(self.target_x, self.target_y, self.target_z)
 
-            # Calculate where the end-effector is right now
-            actual_x, actual_y, actual_z = self.get_current_tcp()
-
-            error = abs(self.target_x-actual_x) + abs(self.target_y-actual_y) + abs(self.target_z - actual_z)
+            # --- PHASE 2: THE "MOVE" ---
+            # Hover above the weed
+            target_x = self.locked_weed_base_pos[0]
+            target_y = self.locked_weed_base_pos[1] + 0.051 + 0.02
+            target_z = self.approach_start_z
+            
+            distance_to_target = self.calculate_tcp_error([target_x, target_y , target_z], [self.approach_start_x, self.approach_start_y, self.approach_start_z])
+            move_duration = distance_to_target / self.tcp_speed_m_s
+            move_duration = max(0.2, move_duration)
+            progress = elapsed_time / move_duration
+            
+            if progress <= 1.0:
+                # Cartesian Path Planner: Interpolate smoothly to the target
+                current_x = self.interpolate_value(self.approach_start_x, target_x, progress)
+                current_y = self.interpolate_value(self.approach_start_y, target_y, progress)
+                current_z = self.approach_start_z
                 
-            # 4. Switch to SCANNING when scanning pose is reached
-            if error <= 0.05:
-                self.get_logger().info("Hover position reached. Switching to WEEDING.")
+                # Orientation remains pointing straight down (handled by default in publish_target)
+                self.publish_target(current_x, current_y, current_z)
+            else:
+                # Hover point reached
+                self.publish_target(target_x, target_y, target_z)
+                self.start_scanning = False
+                self.latest_cam_weed_pos = None
+                self.locked_weed_base_pos = None
+                self.switch_state(RobotState.SECOND_SCAN)
 
-                # Record the Z-height for the weeding plunge
-                self.weeding_start_z = target_z
-                
-                self.state = RobotState.PAUSE
-                self.state_start_time = current_time
-                return
+        elif self.state == RobotState.SECOND_SCAN:
+            if not self.start_scanning:
+                self.get_logger().info("Sent trigger to vision detection")
+                vision_detection = Int32()
+                vision_detection.data = 30
+                self.vision_command.publish(vision_detection)
+                self.start_scanning = True
+            if self.latest_cam_weed_pos is not None:
+                self.switch_state(RobotState.APPROACHING)
 
         elif self.state == RobotState.APPROACHING:
             # LOOK-THEN-MOVE LOGIC
@@ -251,29 +228,27 @@ class PBVSTaskController(Node):
             # Hover above the weed
             target_x = self.locked_weed_base_pos[0]
             target_y = self.locked_weed_base_pos[1] 
-            target_z = self.locked_weed_base_pos[2] + 0.15
+            target_z = self.locked_weed_base_pos[2] + self.hover_offset_z_m
             
-            approach_duration = 4.0
-            progress = elapsed_time / approach_duration
+            distance_to_target = self.calculate_tcp_error([target_x, target_y , target_z], [self.approach_start_x, self.approach_start_y, self.approach_start_z])
+            move_duration = distance_to_target / self.tcp_speed_m_s
+            move_duration = max(0.2, move_duration)
+            progress = elapsed_time / move_duration
             
             if progress <= 1.0:
                 # Cartesian Path Planner: Interpolate smoothly to the target
-                current_x = self.approach_start_x + (target_x - self.approach_start_x) * progress
-                current_y = self.approach_start_y + (target_y - self.approach_start_y) * progress
-                current_z = self.approach_start_z + (target_z - self.approach_start_z) * progress
+                current_x = self.interpolate_value(self.approach_start_x, target_x, progress)
+                current_y = self.interpolate_value(self.approach_start_y, target_y, progress)
+                current_z = self.interpolate_value(self.approach_start_z, target_z, progress)
                 
                 # Orientation remains pointing straight down (handled by default in publish_target)
                 self.publish_target(current_x, current_y, current_z)
             else:
                 # Hover point reached
                 self.publish_target(target_x, target_y, target_z)
-                self.get_logger().info("Hover position reached. Switching to WEEDING.")
-                
                 # Record the Z-height for the weeding plunge
                 self.weeding_start_z = target_z
-                
-                self.state = RobotState.WEEDING
-                self.state_start_time = current_time
+                self.switch_state(RobotState.PLUNGING)
 
         elif self.state == RobotState.DYNAMIC_APPROACHING:
             # PBVS DYNAMIC LOOK-AND-MOVE LOGIC
@@ -288,16 +263,11 @@ class PBVSTaskController(Node):
             # Hover 15 cm directly above the weed
             hover_x = target_base_pos[0]
             hover_y = target_base_pos[1]
-            hover_z = target_base_pos[2] + 0.15
+            hover_z = target_base_pos[2] + self.hover_offset_z_m
             
             # Check if we have physically reached the hover point
             actual_x, actual_y, actual_z = self.get_current_tcp()
-            
-            distance_to_target = math.sqrt(
-                (hover_x - actual_x)**2 + 
-                (hover_y - actual_y)**2 + 
-                (hover_z - actual_z)**2
-            )
+            distance_to_target = self.calculate_tcp_error([hover_x, hover_y , hover_z], [actual_x, actual_y, actual_z])
 
             # Dynamic path planner:
             # Generate small intermediate points on a straight line towards the target.
@@ -320,70 +290,84 @@ class PBVSTaskController(Node):
                 # We are close enough to just snap to the final hover position
                 self.publish_target(hover_x, hover_y, hover_z)
             
-            if distance_to_target < 0.015:
-                self.get_logger().info("Perfectly aligned over weed! Locking target and switching to WEEDING.")
-                
+            if distance_to_target < self.target_tolerance_m:
                 # Lock the exact absolute coordinates of the weed in memory
                 self.locked_weed_base_pos = target_base_pos
                 self.weeding_start_z = actual_z
 
-                self.state = RobotState.WEEDING
-                self.state_start_time = current_time
+                self.switch_state(RobotState.PLUNGING)
         
-        elif self.state == RobotState.WEEDING: 
+        elif self.state == RobotState.PLUNGING:
             # Retrieve the locked coordinates of the weed
             self.target_x = self.locked_weed_base_pos[0]
             self.target_y = self.locked_weed_base_pos[1]
-            self.target_z = self.locked_weed_base_pos[2] - 0.04 # Plunge 4 cm below the plant
+            self.target_z = self.locked_weed_base_pos[2] - self.plunge_depth_m # Plunge below the plant
             
-            plunge_duration = 3.0
-            progress = elapsed_time / plunge_duration
+            distance_to_target = abs(self.target_z - self.weeding_start_z)
+            move_duration = distance_to_target / self.tcp_speed_m_s
+            move_duration = max(0.2, move_duration)
+            progress = elapsed_time / move_duration
             
             if progress <= 1.0:
                 # Cartesian path planner:
                 # Interpolate the Z axis to create a perfectly straight vertical line
-                current_z = self.weeding_start_z + (self.target_z - self.weeding_start_z) * progress
-                
+                current_z = self.interpolate_value(self.weeding_start_z, self.target_z, progress)
                 self.publish_target(self.target_x, self.target_y, current_z)
             else:
                 # We have reached the bottom! Hold the position
                 self.publish_target(self.target_x, self.target_y, self.target_z)
+            
+            # Check if we have physically reached the plunged position
+            actual_x, actual_y, actual_z = self.get_current_tcp()
+            error = self.calculate_tcp_error([self.target_x, self.target_y, self.target_z], [actual_x, actual_y, actual_z])
+
+            if error <= self.target_tolerance_m:
                 # Close the gripper:
                 self.set_gripper('close')
-
-            # Wait for the gripper physical mechanism to close
-            if elapsed_time > (plunge_duration + 3.0):
-                self.get_logger().info("Weed grabbed! Switching to DONE.")
-                self.state = RobotState.DONE
-                self.state_start_time = current_time          
-                   
-        elif self.state == RobotState.DONE:
-            plunge_duration = 3.0
-            progress = elapsed_time / plunge_duration
-            if progress <= 1.0: 
+                self.switch_state(RobotState.GRASPING)
+  
+        elif self.state == RobotState.GRASPING:
+            if elapsed_time > 2.0: # Waiting for the gripper to physically close
+                self.switch_state(RobotState.WEEDING)
+        
+        elif self.state == RobotState.WEEDING:
+            distance_to_target = abs(self.target_z - self.weeding_start_z)
+            move_duration = distance_to_target / self.tcp_speed_m_s
+            move_duration = max(0.2, move_duration)
+            progress = elapsed_time / move_duration
+            if progress <= 1.0:
                 # Pull straight up
                 # Cartesian path planner: Interpolate the Z axis to create a perfectly straight vertical line
-                current_z = self.target_z + (self.weeding_start_z - self.target_z) * progress
-                
+                current_z = self.interpolate_value(self.target_z, self.weeding_start_z, progress)
                 self.publish_target(self.target_x, self.target_y, current_z)
-            elif progress > 1.0 and progress <=2.0:
-                # Go back to scanning pose
-                # Cartesian Path Planner: Interpolate smoothly
-                current_x = self.target_x + (0.5 - self.target_x) * (progress-1.0)
-                current_y = self.target_y + (0.0 - self.target_y) * (progress-1.0)
-                current_z = self.weeding_start_z + (0.1 - self.weeding_start_z) * (progress-1.0)
+            else:
+                self.publish_target(self.target_x, self.target_y, self.weeding_start_z)
+                self.switch_state(RobotState.DONE) 
+
+        elif self.state == RobotState.DONE:
+            distance_to_target = self.calculate_tcp_error([self.target_x, self.target_y , self.weeding_start_z], [self.scan_x, self.scan_y, self.scan_z])
+            move_duration = distance_to_target / self.tcp_speed_m_s
+            move_duration = max(0.2, move_duration)
+            progress = elapsed_time / move_duration
+            if progress <= 1.0:
+                # Cartesian Path Planner: Interpolate smoothly to the target
+                current_x = self.interpolate_value(self.target_x, self.scan_x, progress)
+                current_y = self.interpolate_value(self.target_y, self.scan_y, progress)
+                current_z = self.interpolate_value(self.weeding_start_z, self.scan_z, progress)
                 self.publish_target(current_x, current_y, current_z)
             else:
-                self.publish_target(0.5, 0.0, 0.1)
+                self.publish_target(self.scan_x, self.scan_y, self.scan_z)
                 self.get_logger().info("Task complete. Waiting in safe position.", throttle_duration_sec=2.0)
                 #Open the gripper
                 self.set_gripper('open')
+                self.start_scanning = False
                 self.latest_cam_weed_pos = None
-                self.state = RobotState.PAUSE
-                self.state_start_time = current_time
+                self.locked_weed_base_pos = None
+                self.switch_state(RobotState.PAUSE)
 
         elif self.state == RobotState.PAUSE:
-            time.sleep(1000)
+            if elapsed_time > 10.0: 
+                self.switch_state(RobotState.STARTUP)
 
     def publish_target(self, x, y, z, roll=np.pi, pitch=0, yaw=None):
         """
@@ -427,6 +411,26 @@ class PBVSTaskController(Node):
         based on the current progress (0.0 to 1.0).
         """
         return start_val + (target_val - start_val) * progress
+    
+    def calculate_tcp_error(self, target_pos, actual_pos):
+        """
+        Calculates the Euclidean distance (3D error) between the target and actual TCP positions.
+        """
+        tx, ty, tz = target_pos
+        ax, ay, az = actual_pos
+        return math.sqrt((tx - ax)**2 + (ty - ay)**2 + (tz - az)**2)
+    
+    def switch_state(self, new_state):
+        """
+        Handles transitioning the robot to a new state.
+        Updates the state variable, resets the internal state timer, 
+        and logs the transition to the terminal.
+        """
+        self.state = new_state
+        self.state_start_time = time.time()
+        
+        # Log the state change dynamically using the Enum's string name
+        self.get_logger().info(f"--- Transitioning to State: {new_state.name} ---")
 
 def main(args=None):
     rclpy.init(args=args)

@@ -23,7 +23,7 @@ def transform_camera_to_base(cam_x, cam_y, cam_z, current_joints):
     
     # 3. The physical offset of the camera lens relative to the origin of frame 6.
     offset_x = 0.00
-    offset_y = 0.051 + 0.015
+    offset_y = 0.051 + 0.02
     offset_z = -0.136 
     
     # The camera is facing the exact same direction as the tool flange so no rotation is required
