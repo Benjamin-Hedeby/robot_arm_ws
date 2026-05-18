@@ -32,6 +32,7 @@ setup(
             'rviz_translator = controller_joint_test.rviz_translator:main',
             'orange_detections = controller_joint_test.orange_detections:main',
             'detections_republish_orange = controller_joint_test.detections_republish_orange:main',
+            'orange_detections_test = controller_joint_test.orange_detections_test:main',
         ],
     },
 )
