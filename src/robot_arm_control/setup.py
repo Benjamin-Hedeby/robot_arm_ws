@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'controller_joint_test'
+package_name = 'robot_arm_control'
 
 setup(
     name=package_name,
@@ -13,8 +13,8 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='lucas-brendborg',
-    maintainer_email='lucas@brendborg.dk',
+    maintainer='dev_computer',
+    maintainer_email='benjaminhedeby@live.dk',
     description='TODO: Package description',
     license='TODO: License declaration',
     extras_require={
@@ -24,7 +24,12 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'controller_joint_test = controller_joint_test.controller_joint_test:main',
+            'live_ik_streamer = robot_arm_control.live_ik_streamer:main',
+            'detections_republish = robot_arm_control.detections_republish:main',
+            'task_controller = robot_arm_control.task_controllerV2:main',
+            'IK_square_test = robot_arm_control.IK_square_test:main',
+            'gripper_controller = robot_arm_control.gripper_controller:main',
+            'rviz_translator = robot_arm_control.rviz_translator:main',
         ],
     },
 )
