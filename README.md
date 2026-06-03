@@ -28,7 +28,7 @@ This repository contains the high-level ROS2 control software for an autonomous 
 ## Main Components
 
 ### Task Controller (FSM)
-**File:** [robot_arm_control/task_controllerV2.py](robot_arm_control/task_controllerV2.py)
+**File:** [robot_arm_control/task_controllerV2.py](src/robot_arm_control/robot_arm_control/task_controllerV2.py)
 
 The central orchestrator executing a finite state machine:
 
@@ -39,8 +39,8 @@ STARTUP → SCAN_SWEEP ↔ SCAN_CONFIRM → ALIGNING_XY → FINAL_SCAN
 
 ### Kinematics
 **Files:** 
-- [robot_arm_control/InverseKinematics.py](robot_arm_control/InverseKinematics.py)
-- [robot_arm_control/ForwardKinematics.py](robot_arm_control/ForwardKinematics.py)
+- [robot_arm_control/InverseKinematics.py](src/robot_arm_control/robot_arm_control/InverseKinematics.py)
+- [robot_arm_control/ForwardKinematics.py](src/robot_arm_control/robot_arm_control/ForwardKinematics.py)
 
 **Forward Kinematics:**
 - 5 revolute joints using Craig's modified Denavit-Hartenberg convention
@@ -55,7 +55,7 @@ STARTUP → SCAN_SWEEP ↔ SCAN_CONFIRM → ALIGNING_XY → FINAL_SCAN
 
 
 **Files:**
-- [robot_arm_control/VisionTransformV2.py](robot_arm_control/VisionTransformV2.py) — Camera-to-base frame transforms
+- [robot_arm_control/VisionTransformV2.py](src/robot_arm_control/robot_arm_control/VisionTransformV2.py) — Camera-to-base frame transforms
 - [src/spatial_detector/](src/spatial_detector/) — Spatial detection visualization and republishing
  
 The vision system uses a custom made Neural Network (NN) to detect and calculate spatial coordinates of weeds. 
