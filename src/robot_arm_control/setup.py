@@ -28,7 +28,6 @@ setup(
             'detections_republish = robot_arm_control.detections_republish:main',
             'task_controller = robot_arm_control.task_controllerV2:main',
             'IK_square_test = robot_arm_control.IK_square_test:main',
-            'gripper_controller = robot_arm_control.gripper_controller:main',
             'rviz_translator = robot_arm_control.rviz_translator:main',
         ],
     },
