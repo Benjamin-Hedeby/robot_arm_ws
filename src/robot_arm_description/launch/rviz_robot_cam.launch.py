@@ -92,6 +92,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    start_visualizer_cmd = Node(
+        package='spatial_detector',
+        executable='spatial_visualizer',
+        name='spatial_visualizer',
+        output='screen'
+    )
+
     start_detection_republisher_cmd = Node(
         package='controller_joint_test',
         executable='detections_republish',
@@ -106,5 +113,6 @@ def generate_launch_description():
         start_rviz_cmd,
         start_camera_cmd,
         start_overlay_cmd,
-        # start_detection_republisher_cmd
+        start_visualizer_cmd,
+        start_detection_republisher_cmd
     ])

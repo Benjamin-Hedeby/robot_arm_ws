@@ -3,15 +3,11 @@ from rclpy.node import Node
 from rclpy.action import ActionClient
 from std_msgs.msg import String
 from control_msgs.action import GripperCommand
+from .configuration import GRIPPER_CLOSED_POSITION, GRIPPER_OPEN_POSITION, GRIPPER_MAX_EFFORT
 
 class GripperTranslatorNode(Node):
     def __init__(self):
         super().__init__('gripper_translator_node')
-        
-        # --- Configuration (Matches your URDF) ---
-        self.OPEN_POSITION = -0.3 
-        self.CLOSED_POSITION = 0.3 
-        self.MAX_EFFORT = 2.0
         
         # 1. The Action Client (Talks to the physical gripper)
         self.gripper_client = ActionClient(
@@ -36,11 +32,11 @@ class GripperTranslatorNode(Node):
         
         if command == 'open':
             self.get_logger().info('Received "open". Opening gripper...')
-            self.send_goal(self.OPEN_POSITION)
+            self.send_goal(GRIPPER_OPEN_POSITION)
             
         elif command == 'close':
             self.get_logger().info('Received "close". Closing gripper...')
-            self.send_goal(self.CLOSED_POSITION)
+            self.send_goal(GRIPPER_CLOSED_POSITION)
             
         else:
             self.get_logger().warn(f'Unknown command: "{command}". Please send "open" or "close".')
@@ -54,9 +50,8 @@ class GripperTranslatorNode(Node):
         # Build the action goal
         goal_msg = GripperCommand.Goal()
         goal_msg.command.position = target_position
-        goal_msg.command.max_effort = self.MAX_EFFORT
+        goal_msg.command.max_effort = GRIPPER_MAX_EFFORT
         
-        # Fire it off!
         self.gripper_client.send_goal_async(goal_msg)
 
 def main(args=None):

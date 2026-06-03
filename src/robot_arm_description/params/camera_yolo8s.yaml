@@ -3,12 +3,12 @@
     camera:
       # i_enable_nn: true 
       i_pipeline_type: RGBD           
-      i_nn_type: none          
+      i_nn_type: spatial         
       i_enable_imu: true  
       i_publish_tf_from_calibration: false
-      i_external_calibration_path: "/mnt/hgfs/VMware_ubuntu/robot_arm_ws/src/robot_arm_description/params/custom_calib.json"
+      i_external_calibration_path: "/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description/params/custom_calib.json"
       i_tf_base_frame: "oak"
-      i_tf_parent_frame: "oak_d_s2"       
+      i_tf_parent_frame: "oak_d_s2"  
  
     rgb:
       i_publish_topic: true
@@ -24,8 +24,8 @@
       i_depth_filter_size: 5          # Smooths out noise
 
     nn:
-      i_nn_config_path: "/mnt/hgfs/VMware_ubuntu/robot_arm_ws/src/robot_arm_description/params/yolo8s.json"
-      i_blob_path: "/mnt/hgfs/VMware_ubuntu/robot_arm_ws/src/robot_arm_description/params/yolo8s_openvino_2022.1_5shave.blob"
+      i_nn_config_path: "/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description/params/yolo8s.json"
+      i_blob_path: "/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description/params/yolo8s_openvino_2022.1_5shave.blob"
       i_num_shaves: 5             
       i_disable_resize: true
 

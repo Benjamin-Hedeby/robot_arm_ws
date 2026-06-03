@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
+from .configuration import JOINT_LIMITS
 
 # Import your validated IK function
 from .InverseKinematics import inverse_kinematics
@@ -41,23 +42,14 @@ class LiveIKStreamer(Node):
             
             # Run the Inverse Kinematics calculation
             joints = inverse_kinematics(position, orientation)
-
-            # --- SAFETY SHIELD: JOINT LIMITS ---
-            joint_limits = [
-                [-0.3, 3.12],          # Joint 1 (Base)
-                [-1.05, 1.95],         # Joint 2 (Shoulder)
-                [-2.0, 2.0],           # Joint 3 (Elbow)
-                [-2.09, 2.09],         # Joint 4 (Wrist 1)
-                [-2.0, 2.0]            # Joint 5 (Wrist 2)
-            ]
             
             # Check the first 5 physical joints against their limits
             limit_exceeded = False
             for i in range(5):
-                if not (joint_limits[i][0] <= joints[i] <= joint_limits[i][1]):
+                if not (JOINT_LIMITS[i][0] <= joints[i] <= JOINT_LIMITS[i][1]):
                     self.get_logger().error(
                         f"SAFETY TRIGGERED! Joint {i+1} requested angle {round(joints[i], 3)} rad "
-                        f"is out of physical bounds [{round(joint_limits[i][0], 2)}, {round(joint_limits[i][1], 2)}]."
+                        f"is out of physical bounds [{round(JOINT_LIMITS[i][0], 2)}, {round(JOINT_LIMITS[i][1], 2)}]."
                     )
                     limit_exceeded = True
             
@@ -72,7 +64,7 @@ class LiveIKStreamer(Node):
 
             # Changed from 6DOF to 5DOF:
             physical_joints = joints[:5]
-            physical_joints[4] = physical_joints[4] + 0.05
+            #physical_joints[4] = physical_joints[4] + 0.05
             
             # Round to 4 decimal places to prevent scientific notation (e-18) from crashing the hardware controllers.
             cleaned_joints = [round(float(j), 4) for j in physical_joints]

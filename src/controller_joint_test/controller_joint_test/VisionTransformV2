@@ -34,7 +34,7 @@ def transform_camera_to_base(cam_x, cam_y, cam_z, current_joints, imu_roll=None,
     list : [X_base, Y_base, Z_base] representing the physical location on the ground
     """
     # Format the target position as a 4x1 homogeneous vector
-    P_cam = np.array([cam_x-0.023, cam_y-0.005, cam_z, 1.0])
+    P_cam = np.array([cam_x, cam_y, cam_z, 1.0])
     
     # Get where the robot thinks it is from the encoders
     T_base_tool = forward_kinematics(current_joints, verbose=False)
@@ -47,15 +47,18 @@ def transform_camera_to_base(cam_x, cam_y, cam_z, current_joints, imu_roll=None,
         [0.0, 0.0, 0.0, 1.0 ]
     ])
 
+    T_base_cam = np.dot(T_base_tool, T_tool_cam)
+
     # Apply IMU correction if data is available
     if imu_roll is not None and imu_pitch is not None:
-        # Build a new, reality-corrected rotation matrix
-        R_corrected = euler_to_rot_matrix(imu_roll, imu_pitch, 0)
+        # Determine the theoretical yaw from FK
+        theoretical_yaw = np.arctan2(T_base_cam[1, 0], T_base_cam[0, 0])
         
-        # Overwrite the top-left 3x3 rotation block in the transformation matrix
-        T_tool_cam[:3, :3] = R_corrected
-    
-    T_base_cam = np.dot(T_base_tool, T_tool_cam)
+        # New IMU-corrected rotation matrix
+        R_corrected_absolute = euler_to_rot_matrix(imu_roll, imu_pitch, theoretical_yaw)
+        
+        # Overwrite the theoretical orientation with the real-world measured orientation
+        T_base_cam[:3, :3] = R_corrected_absolute
 
     # Transform the weed coordinate using the corrected matrix
     P_base = np.dot(T_base_cam, P_cam)
