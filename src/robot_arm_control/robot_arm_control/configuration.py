@@ -36,10 +36,3 @@ JOINT_LIMITS = [
 CAMERA_OFFSET_X = 0.00
 CAMERA_OFFSET_Y = 0.051
 CAMERA_OFFSET_Z = -0.136
-
-# ==========================================
-# 4. GRIPPER CONFIGURATION
-# ==========================================
-GRIPPER_OPEN_POSITION = -0.3
-GRIPPER_CLOSED_POSITION = 0.5
-GRIPPER_MAX_EFFORT = 2.0
