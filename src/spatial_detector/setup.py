@@ -22,6 +22,7 @@ setup(
     entry_points={
         'console_scripts': [
             'spatial_overlay = spatial_detector.spatial_overlay:main',
+            'spatial_vizualizer = spatial_detector.spatial_visualizer_node:main',
         ],
     },
 )
