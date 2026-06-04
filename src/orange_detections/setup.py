@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'controller_joint_test'
+package_name = 'orange_detections'
 
 setup(
     name=package_name,
@@ -13,8 +13,8 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='lucas-brendborg',
-    maintainer_email='lucas@brendborg.dk',
+    maintainer='dev_computer',
+    maintainer_email='benjaminhedeby@live.dk',
     description='TODO: Package description',
     license='TODO: License declaration',
     extras_require={
@@ -24,7 +24,9 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'controller_joint_test = controller_joint_test.controller_joint_test:main',
+            'orange_detections = orange_detections.orange_detections:main',
+            'detections_republish_orange = orange_detections.detections_republish_orange:main',
+            'orange_detections_test = orange_detections.orange_detections_test:main',
         ],
     },
 )

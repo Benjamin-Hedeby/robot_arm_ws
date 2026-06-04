@@ -1,11 +1,9 @@
 import numpy as np
 from math import cos, sin, pi
+from .configuration import A1, A2, D4, D6
 
 def inverse_kinematics(position, orientation):
 
-    a_1 = 0.040 # Changed from 0.045
-    a_2 = 0.300
-    d_4 = 0.380 # Changed from 0.334
     x_ee, y_ee, z_ee = position         # End-effector position
     gamma, beta, alpha = orientation    # End-effector orientation (X-Y-Z fixed angles)
 
@@ -13,32 +11,33 @@ def inverse_kinematics(position, orientation):
     R_0_6 = fixed_angles_to_rotation_matrix(gamma, beta, alpha)
 
     # Calculate the Wrist Center (P_wc)
-    # d6 is the distance from the wrist center (intersection of Z4, Z5, Z6) to the end-effector.
-    d6 = 0.201 # 0.061 is the marker offset
-
     # The Z-axis of the end-effector in the base frame is the 3rd column of R_0_6
     Z_ee = R_0_6[:, 2]
 
     # Subtract the gripper length along the Z-axis vector to find the Wrist Center
-    x_wc = x_ee - d6 * Z_ee[0]
-    y_wc = y_ee - d6 * Z_ee[1]
-    z_wc = z_ee - d6 * Z_ee[2]
+    x_wc = x_ee - D6 * Z_ee[0]
+    y_wc = y_ee - D6 * Z_ee[1]
+    z_wc = z_ee - D6 * Z_ee[2]
 
     # Solve for the arm joint angles (Theta 1, 2, 3) using Wrist Center
     theta1 = np.arctan2(y_wc, x_wc)
-
     x_1 = np.sqrt(x_wc**2 + y_wc**2)
-    R = np.sqrt((x_1 - a_1)**2 + z_wc**2)
-    phi1 = np.arctan2(z_wc, x_1-a_1)
-    arccos_argument = (R**2+a_2**2-d_4**2)/(2*a_2*R)
-    arccos_argument = np.clip(arccos_argument, -1.0, 1.0)
-    phi2 = np.arccos(arccos_argument)
+    R = np.sqrt((x_1 - A1)**2 + z_wc**2)
 
+    # Compute arguments for arccosine functions
+    cos_phi2 = (R**2+A2**2-D4**2)/(2*A2*R)
+    cos_psi = (A2 ** 2 + D4 ** 2 - R ** 2) / (2 * A2 * D4)
+
+    # Check if the goal is reachable
+    if abs(cos_phi2) > 1.0 or abs(cos_psi) > 1.0:
+        # Goal is outside the Workspace. Return None.
+        return None
+
+    phi1 = np.arctan2(z_wc, x_1-A1)
+    phi2 = np.arccos(cos_phi2)
     theta2 = phi2 + phi1
-
-    arccos_argument = (a_2 ** 2 + d_4 ** 2 - R ** 2) / (2 * a_2 * d_4)
-    arccos_argument = np.clip(arccos_argument, -1.0, 1.0)
-    psi = np.arccos(arccos_argument)
+  
+    psi = np.arccos(cos_psi)
     theta3 = psi - np.pi/2
 
     # R_0_4_zero is the rotation matrix from frame 0 to 4 evaluated at theta_4 = 0
@@ -50,7 +49,6 @@ def inverse_kinematics(position, orientation):
     r11, r12, r13 = R_wrist[0, 0], R_wrist[0, 1], R_wrist[0, 2]
     r21, r22, r23 = R_wrist[1, 0], R_wrist[1, 1], R_wrist[1, 2]
     r31, r32, r33 = R_wrist[2, 0], R_wrist[2, 1], R_wrist[2, 2]
-
 
     # Calculate theta_5 (Beta)
     # Calculate the positive and negative roots

@@ -1,5 +1,6 @@
 import numpy as np
 from math import cos, sin, pi
+from .configuration import DH_TABLE
 
 def get_modified_dh_matrix(alpha, a, d, theta):
     """
@@ -40,18 +41,6 @@ def forward_kinematics(joints, return_skeleton=False, verbose=False):
     Returns:
     numpy.ndarray: Final 4x4 transformation matrix (Base to End-Effector)
     """
-    # 1. Define the DH Parameters based on the physical robot
-    # Format: [alpha_(i-1), a_(i-1), d_i]
-    # Note: Units are in METERS
-    dh_table = [
-        [0,       0,      0],        # Frame 1
-        [pi / 2,  0.040,  0],        # Frame 2
-        [0,       0.300,  0],        # Frame 3
-        [pi / 2,  0.000,  0.380],    # Frame 4
-        [-pi / 2, 0,      0],        # Frame 5
-        [pi / 2,  0,      0.201]     # Frame 6 (End-Effector)
-    ]
-
     # Initialize the total transformation as an Identity Matrix (4x4)
     T_total = np.eye(4)
     skeleton_points = []
@@ -61,7 +50,7 @@ def forward_kinematics(joints, return_skeleton=False, verbose=False):
         print("Computing Forward Kinematics:")
 
     # Loop through each joint and multiply matrices sequentially
-    for i, params in enumerate(dh_table):
+    for i, params in enumerate(DH_TABLE):
         alpha = params[0]
         a = params[1]
         d = params[2]
@@ -74,7 +63,8 @@ def forward_kinematics(joints, return_skeleton=False, verbose=False):
             theta = -theta + pi/2
         elif i == 2:
             theta = theta + pi/2
-           # Calculate transformation for current link
+
+        # Calculate transformation for current link
         T_i = get_modified_dh_matrix(alpha, a, d, theta)
 
         # Multiply to the chain: T_total = T_total * T_i
@@ -123,7 +113,7 @@ def rotation_matrix_to_fixed_angles(T):
 if __name__ == "__main__":
     
     # Test 1: Given position
-    test_joints = [0, np.pi / 2, np.pi / 2, 0, 0, 0]
+    test_joints = [0, np.pi/2, -np.pi/2, 0, 0, 0]
 
     # Run the kinematics with verbose enabled to see intermediate steps
     final_transform = forward_kinematics(test_joints, verbose=True)

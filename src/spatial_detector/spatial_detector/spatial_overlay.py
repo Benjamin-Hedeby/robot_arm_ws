@@ -60,24 +60,33 @@ class SpatialOverlay(Node):
     def dets_cb(self, msg: Detection3DArray):
         # Store detections
         self.detections = msg.detections
-        cnt = len(self.detections)
-        # self.get_logger().info(f'[dets_cb] got {cnt} detections')
-
+        
         # 1) RViz sphere markers
         ma = MarkerArray()
-        for i, det in enumerate(self.detections):
-            p = det.results[0].pose.pose.position
-            m = Marker()
-            m.header            = msg.header
-            m.ns                = 'plants'
-            m.id                = i
-            m.type              = Marker.SPHERE
-            m.action            = Marker.ADD
-            m.pose.position     = p
-            m.pose.orientation.w = 1.0
-            m.scale.x = m.scale.y = m.scale.z = 0.05
-            m.color.r = 1.0; m.color.g = 0.5; m.color.b = 0.0; m.color.a = 0.8
-            ma.markers.append(m)
+        
+        if not self.detections:
+            # --- THE FIX: Tell RViz to delete all markers if no plants are seen ---
+            clear_marker = Marker()
+            clear_marker.header = msg.header
+            clear_marker.ns = 'plants'
+            clear_marker.action = Marker.DELETEALL
+            ma.markers.append(clear_marker)
+        else:
+            # Draw markers normally
+            for i, det in enumerate(self.detections):
+                p = det.results[0].pose.pose.position
+                m = Marker()
+                m.header            = msg.header
+                m.ns                = 'plants'
+                m.id                = i
+                m.type              = Marker.SPHERE
+                m.action            = Marker.ADD
+                m.pose.position     = p
+                m.pose.orientation.w = 1.0
+                m.scale.x = m.scale.y = m.scale.z = 0.05
+                m.color.r = 1.0; m.color.g = 0.5; m.color.b = 0.0; m.color.a = 0.8
+                ma.markers.append(m)
+                
         self.mark_pub.publish(ma)
 
         # 2) PointCloud2 of all detections
@@ -97,6 +106,7 @@ class SpatialOverlay(Node):
             points=points
         )
         self.pc_pub.publish(pc2_msg)
+
 
     def image_cb(self, msg: Image):
         try:

@@ -48,7 +48,7 @@ class OrangeTrackerNode(Node):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
         # Black out the top 150 pixels to ignore the orange robot parts
-        frame[0:160,:] = [0, 0, 0]
+        frame[0:170,:] = [0, 0, 0]
 
         frame[:, 0:300] = [0, 0, 0]
 

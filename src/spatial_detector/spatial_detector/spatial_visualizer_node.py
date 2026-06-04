@@ -127,7 +127,6 @@ class SpatialVisualizer(Node):
         except CvBridgeError as e:
             self.get_logger().error(f'Publish error: {e}')
 
-
 def main(args=None):
     rclpy.init(args=args)
     node = SpatialVisualizer()

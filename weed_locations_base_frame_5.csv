@@ -1,0 +1,65 @@
+Timestamp,X_Base,Y_Base,Z_Base,State_Context,Status
+2026-05-22 15:30:29,0.5082,-0.0375,-0.4979,First Scan (Centering),Success
+2026-05-22 15:30:29,0.5147,-0.0332,-0.4985,Second Scan (Final Approach),Success
+2026-05-22 15:31:16,0.4339,-0.3397,-0.5458,First Scan (Centering),Success
+2026-05-22 15:31:16,0.4315,-0.3400,-0.4922,Second Scan (Final Approach),Success
+2026-05-22 15:34:19,0.5161,-0.0357,-0.4967,First Scan (Centering),Success
+2026-05-22 15:34:19,0.5282,-0.0333,-0.5010,Second Scan (Final Approach),Success
+2026-05-22 16:20:52,0.4261,-0.1307,-0.5173,First Scan (Centering),Failed
+2026-05-22 16:20:52,0.4099,-0.1324,-0.4897,Second Scan (Final Approach),Failed
+2026-05-22 16:21:33,0.5219,-0.0225,-0.5015,First Scan (Centering),Success
+2026-05-22 16:21:33,0.5247,-0.0275,-0.4891,Second Scan (Final Approach),Success
+2026-05-22 16:22:17,0.5157,0.1994,-0.5002,First Scan (Centering),Failed
+2026-05-22 16:22:17,0.5215,0.1911,-0.4948,Second Scan (Final Approach),Failed
+2026-05-22 16:23:00,0.5244,0.0047,-0.5040,First Scan (Centering),Success
+2026-05-22 16:23:00,0.5294,-0.0021,-0.4927,Second Scan (Final Approach),Success
+2026-05-22 16:25:18,0.5393,0.2042,-0.4996,First Scan (Centering),Success
+2026-05-22 16:25:18,0.5620,0.1994,-0.4881,Second Scan (Final Approach),Success
+2026-05-22 16:26:41,0.5170,0.1084,-0.4932,First Scan (Centering),Success
+2026-05-22 16:26:41,0.5276,0.1060,-0.4975,Second Scan (Final Approach),Success
+2026-05-22 16:27:57,0.5168,-0.0818,-0.4830,First Scan (Centering),Success
+2026-05-22 16:27:57,0.5207,-0.0868,-0.4934,Second Scan (Final Approach),Success
+2026-05-22 16:28:29,0.4830,-0.1980,-0.4742,First Scan (Centering),Success
+2026-05-22 16:28:29,0.4844,-0.2042,-0.4889,Second Scan (Final Approach),Success
+2026-05-22 16:29:24,0.5253,-0.0821,-0.4798,First Scan (Centering),Success
+2026-05-22 16:29:24,0.5369,-0.0907,-0.4917,Second Scan (Final Approach),Success
+2026-05-22 16:30:07,0.5230,0.0838,-0.4777,First Scan (Centering),Success
+2026-05-22 16:30:07,0.5328,0.0788,-0.4972,Second Scan (Final Approach),Success
+2026-05-22 16:30:54,0.4790,0.2762,-0.4723,First Scan (Centering),Success
+2026-05-22 16:30:54,0.4855,0.2699,-0.4956,Second Scan (Final Approach),Success
+2026-05-22 16:31:43,0.4865,0.3017,-0.4866,First Scan (Centering),Success
+2026-05-22 16:31:43,0.4920,0.2948,-0.4931,Second Scan (Final Approach),Success
+2026-05-22 16:32:32,0.4452,0.3535,-0.4776,First Scan (Centering),Success
+2026-05-22 16:32:32,0.4518,0.3530,-0.4930,Second Scan (Final Approach),Success
+2026-05-22 16:34:02,0.5532,-0.0049,-0.4910,First Scan (Centering),Success
+2026-05-22 16:34:02,0.5588,-0.0089,-0.4860,Second Scan (Final Approach),Success
+2026-05-22 16:35:13,0.5408,0.0808,-0.4771,First Scan (Centering),Success
+2026-05-22 16:35:13,0.5470,0.0792,-0.4923,Second Scan (Final Approach),Success
+2026-05-22 16:36:03,0.4727,0.1419,-0.4813,First Scan (Centering),Success
+2026-05-22 16:36:03,0.4818,0.1383,-0.4977,Second Scan (Final Approach),Success
+2026-05-22 16:36:56,0.4941,0.2734,-0.4736,First Scan (Centering),Success
+2026-05-22 16:36:56,0.4971,0.2691,-0.4943,Second Scan (Final Approach),Success
+2026-05-22 16:39:01,0.5315,0.0889,-0.4769,First Scan (Centering),Success
+2026-05-22 16:39:01,0.5333,0.0805,-0.4915,Second Scan (Final Approach),Success
+2026-05-22 16:44:55,0.5072,0.1004,-0.4919,First Scan (Centering),Success
+2026-05-22 16:44:55,0.5171,0.0996,-0.4927,Second Scan (Final Approach),Success
+2026-05-22 16:45:46,0.4883,0.2905,-0.4765,First Scan (Centering),Success
+2026-05-22 16:45:46,0.4911,0.2848,-0.4904,Second Scan (Final Approach),Success
+2026-05-22 16:46:32,0.4976,0.2593,-0.4844,First Scan (Centering),Success
+2026-05-22 16:46:32,0.5000,0.2538,-0.4890,Second Scan (Final Approach),Success
+2026-05-22 16:47:17,0.4912,0.2861,-0.4857,First Scan (Centering),Success
+2026-05-22 16:47:17,0.4939,0.2810,-0.4871,Second Scan (Final Approach),Success
+2026-05-22 16:48:23,0.4357,-0.3117,-0.4879,First Scan (Centering),Success
+2026-05-22 16:48:23,0.4373,-0.3128,-0.4867,Second Scan (Final Approach),Success
+2026-05-22 16:49:02,0.5546,-0.1099,-0.4897,First Scan (Centering),Success
+2026-05-22 16:49:02,0.5575,-0.1169,-0.4869,Second Scan (Final Approach),Success
+2026-05-22 16:50:34,0.5407,0.2179,-0.4799,First Scan (Centering),Success
+2026-05-22 16:50:34,0.5415,0.2072,-0.4862,Second Scan (Final Approach),Success
+2026-05-22 16:51:20,0.5422,0.3657,-0.5165,First Scan (Centering),Failed
+2026-05-22 16:51:20,0.5397,0.3523,-0.4758,Second Scan (Final Approach),Failed
+2026-05-22 16:53:55,0.5196,0.0650,-0.4819,First Scan (Centering),Success
+2026-05-22 16:53:55,0.5210,0.0488,-0.4936,Second Scan (Final Approach),Success
+2026-05-22 16:54:45,0.5580,0.2362,-0.4814,First Scan (Centering),Success
+2026-05-22 16:54:45,0.5594,0.2267,-0.4834,Second Scan (Final Approach),Success
+2026-05-22 16:55:21,0.4604,0.0600,-0.4892,First Scan (Centering),Failed
+2026-05-22 16:55:21,0.4526,0.0510,-0.4917,Second Scan (Final Approach),Failed

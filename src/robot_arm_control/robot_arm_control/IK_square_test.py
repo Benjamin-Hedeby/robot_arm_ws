@@ -12,8 +12,8 @@ class SquareTestNode(Node):
         self.target_pub = self.create_publisher(Float64MultiArray, '/desired_tcp_pose_euler', 10)
         
         # --- CONFIGURATION ---
-        self.HOVER_Z = -0.20    # Hover over the table
-        self.PAPER_Z = -0.3037    # Height of the paper 
+        self.HOVER_Z = -0.45      # Hover over the table
+        self.PAPER_Z = -0.505     # Exact height of the paper 
         
         self.duration_per_line = 3.0  # 3 seconds to draw each line
         
@@ -21,10 +21,10 @@ class SquareTestNode(Node):
         # Centered at X=0.55, Y=0.0
         self.corners = [
             (0.50, -0.05), # Corner 0: Bottom Right
-            (0.60, -0.05), # Corner 1: Top Right
-            (0.60,  0.05), # Corner 2: Top Left
-            (0.50,  0.05), # Corner 3: Bottom Left
-            (0.50, -0.05)  # Back to Corner 0 to close the square
+            (0.50, -0.00), # Corner 1: Top Right
+            (0.50,  0.05), # Corner 2: Top Left
+            (0.50,  0.10), # Corner 3: Bottom Left
+            (0.50,  0.15)  # Back to Corner 0 to close the square
         ]
         
         # State machine variables
@@ -107,12 +107,12 @@ class SquareDotTestNode(Node):
         self.target_pub = self.create_publisher(Float64MultiArray, '/desired_tcp_pose_euler', 10)
         
         # --- CONFIGURATION ---
-        self.HOVER_Z = -0.25      # Hover over the table
-        self.PAPER_Z = -0.3037    # Exact height of the paper 
+        self.HOVER_Z = -0.45      # Hover over the table
+        self.PAPER_Z = -0.509     # Exact height of the paper 
         
         # Durations for the different movements to ensure smooth motion
-        self.duration_air_move = 1.5  # Seconds to move horizontally between corners
-        self.duration_poke = 1.5      # Seconds to move down to the paper / up from the paper
+        self.duration_air_move = 2  # Seconds to move horizontally between corners
+        self.duration_poke = 2      # Seconds to move down to the paper / up from the paper
         self.duration_hold = 0.5      # Seconds to hold the pen on the paper to leave a mark
         
         # Define the 4 corners of a 10x10 cm square
@@ -338,7 +338,7 @@ class SineWaveTestNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = SineWaveTestNode()
+    node = SquareDotTestNode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
