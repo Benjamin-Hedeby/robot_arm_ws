@@ -27,13 +27,15 @@ def generate_launch_description():
     # ================== 2. Robot Nodes ==================
     
     # Robot State Publisher (Calculates 3D coordinates)
+    # /arm/robot_description keeps this off kridtbot's own /robot_description
+    # when both run on the same ROS domain (Mini PC integration).
     start_rsp_cmd = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
         parameters=[{'robot_description': robot_description_content}],
 
-        remappings=[('/robot_description', '/arm_description')]
+        remappings=[('/robot_description', '/arm/robot_description')]
     )
 
     # Headless Joint State Publisher (Publishes 0.0 so RViz doesn't error on boot)
@@ -43,7 +45,7 @@ def generate_launch_description():
         name='joint_state_publisher',
         parameters=[{'robot_description': robot_description_content}],
 
-        remappings=[('/robot_description', '/arm_description')] # <--- Add it here too!
+        remappings=[('/robot_description', '/arm/robot_description')] # <--- Add it here too!
     )
 
     # RViz2 Node
@@ -65,8 +67,11 @@ def generate_launch_description():
             ])
         ),
         launch_arguments={
-            'name': 'oak',
-            'parent_frame': 'oak_d_s2',   
+            # 'oak_arm' (not the depthai default 'oak') so this doesn't collide
+            # with kridtbot's own OAK-D, which also uses the default 'oak' name
+            # (see kridtbot's camera_params.yaml i_tf_camera_name).
+            'name': 'oak_arm',
+            'parent_frame': 'oak_d_s2',
 
             # --- TRANSLATION (in meters) ---
             'cam_pos_x': '0.0',
@@ -85,25 +90,47 @@ def generate_launch_description():
         }.items()
     )
 
+    # Remap table shared by the vision-adjacent nodes below: the camera now
+    # publishes under /oak_arm/... (see start_camera_cmd), and every other
+    # absolute topic these nodes use is hardcoded with a leading slash in
+    # their source, so namespacing the launch won't touch it -- explicit
+    # remaps are the only thing that works.
+    oak_remaps = [
+        ('/oak/rgb/camera_info', '/oak_arm/rgb/camera_info'),
+        ('/oak/rgb/image_rect', '/oak_arm/rgb/image_rect'),
+        ('/oak/nn/spatial_detections', '/oak_arm/nn/spatial_detections'),
+    ]
+
     start_overlay_cmd = Node(
         package='spatial_detector',
         executable='spatial_overlay',
         name='spatial_overlay',
-        output='screen'
+        output='screen',
+        remappings=oak_remaps,
     )
 
     start_visualizer_cmd = Node(
         package='spatial_detector',
         executable='spatial_visualizer',
         name='spatial_visualizer',
-        output='screen'
+        output='screen',
+        remappings=oak_remaps,
     )
 
+    # NOTE: package was 'controller_joint_test', which has never actually
+    # registered a 'detections_republish' executable (only 'controller_joint_test'
+    # itself) -- this Node has been broken since it was written. The real
+    # detections_republish lives in robot_arm_control; fixed here.
     start_detection_republisher_cmd = Node(
-        package='controller_joint_test',
+        package='robot_arm_control',
         executable='detections_republish',
         name='detections_republish',
-        output='screen'
+        output='screen',
+        remappings=oak_remaps + [
+            ('/range', '/arm/range'),
+            ('/trigger_measurement', '/arm/trigger_measurement'),
+            ('/weed_location_cam_frame', '/arm/weed_location_cam_frame'),
+        ],
     )
 
     # ================== 4. Return Everything ==================

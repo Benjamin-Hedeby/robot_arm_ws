@@ -114,7 +114,19 @@ The vision system uses a custom made Neural Network (NN) to detect and calculate
 
 ### Running the System
 
-**Start visualization and vision:**
+**On kridtbot's Mini PC (integrated with the rover):**
+```bash
+ros2 launch robot_arm_description arm_bringup.launch.py
+```
+Headless bringup for real operation on the rover. Every topic here is
+remapped under `/arm/...` (camera under `/oak_arm/...`) so it can't collide
+with kridtbot's own rover topics when both run on the same ROS domain — see
+the comments at the top of `arm_bringup.launch.py`. This assumes the
+Raspberry Pi is reachable on the same `ROS_DOMAIN_ID` and already running
+`arm_control`'s `arm.launch.py` (also namespaced `/arm`), which is the
+canonical source of `/arm/joint_states` and `/arm/robot_description`.
+
+**On a dev machine, for bench testing/visualization (not namespaced):**
 ```bash
 ros2 launch robot_arm_description rviz_robot_cam.launch.py
 ```
@@ -129,8 +141,34 @@ This launches:
 **In separate terminals, manually launch the control nodes:**
 ```bash
 # Terminal 1: Task controller (main FSM)
-ros2 run robot_arm_control task_controllerV2
+ros2 run robot_arm_control task_controller
 
 # Terminal 2: Inverse kinematics streamer
 ros2 run robot_arm_control live_ik_streamer
+```
+
+Run this way (no remaps), these talk on the old unnamespaced topics
+(`/joint_states`, `/arm_controller/commands`, ...) — fine for isolated bench
+testing against `rviz_robot_cam.launch.py`, but they will **not** reach the
+Pi once it's running the namespaced `arm.launch.py`. Use
+`arm_bringup.launch.py` for anything talking to real hardware.
+
+**Same two terminals, but against real hardware:** add the `/arm` (and
+`/oak_arm`) remaps by hand so each node reaches the namespaced topics the Pi
+and camera actually use — this is the manual equivalent of what
+`arm_bringup.launch.py` does for you automatically:
+```bash
+# Terminal 1: Task controller (main FSM)
+ros2 run robot_arm_control task_controller --ros-args \
+  -r /desired_tcp_pose_euler:=/arm/desired_tcp_pose_euler \
+  -r /gripper_open_close_cmd:=/arm/gripper_open_close_cmd \
+  -r /trigger_measurement:=/arm/trigger_measurement \
+  -r /joint_states:=/arm/joint_states \
+  -r /weed_location_cam_frame:=/arm/weed_location_cam_frame \
+  -r /oak/imu/data:=/oak_arm/imu/data
+
+# Terminal 2: Inverse kinematics streamer
+ros2 run robot_arm_control live_ik_streamer --ros-args \
+  -r /desired_tcp_pose_euler:=/arm/desired_tcp_pose_euler \
+  -r /arm_controller/commands:=/arm/arm_controller/commands
 ```
