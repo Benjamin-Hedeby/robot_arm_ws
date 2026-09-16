@@ -24,7 +24,7 @@ if(BUILD_TESTING)
 endif()
 
 # Install the 3D meshes
-install(DIRECTORY assets launch params rviz 
+install(DIRECTORY assets launch params
   DESTINATION share/${PROJECT_NAME}
 )
 

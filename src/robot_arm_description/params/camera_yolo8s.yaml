@@ -1,13 +1,18 @@
-/oak:
+# Must match the camera 'name' launch arg (oak_arm) -- a mismatched key silently
+# loads none of these params, so the NN/IMU/calibration settings would be ignored.
+/oak_arm:
   ros__parameters:
     camera:
-      # i_enable_nn: true 
-      i_pipeline_type: RGBD           
-      i_nn_type: spatial         
-      i_enable_imu: true  
+      # i_enable_nn: true
+      i_pipeline_type: RGBD
+      i_nn_type: spatial
+      i_enable_imu: true
       i_publish_tf_from_calibration: false
-      i_external_calibration_path: "/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description/params/custom_calib.json"
-      i_tf_base_frame: "oak"
+      # The find-pkg-share substitutions below resolve at launch (depthai's camera.launch.py
+      # loads this file with allow_substs=True), so these paths work on any machine.
+      # Don't write the dollar-paren substitution syntax in comments: it gets evaluated too.
+      i_external_calibration_path: "$(find-pkg-share robot_arm_description)/params/custom_calib.json"
+      i_tf_base_frame: "oak_arm"
       i_tf_parent_frame: "oak_d_s2"  
  
     rgb:
@@ -24,8 +29,8 @@
       i_depth_filter_size: 5          # Smooths out noise
 
     nn:
-      i_nn_config_path: "/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description/params/yolo8s.json"
-      i_blob_path: "/home/dev_computer/Desktop/robot_arm_ws/src/robot_arm_description/params/yolo8s_openvino_2022.1_5shave.blob"
+      i_nn_config_path: "$(find-pkg-share robot_arm_description)/params/yolo8s.json"
+      i_blob_path: "$(find-pkg-share robot_arm_description)/params/yolo8s_openvino_2022.1_5shave.blob"
       i_num_shaves: 5             
       i_disable_resize: true
 
