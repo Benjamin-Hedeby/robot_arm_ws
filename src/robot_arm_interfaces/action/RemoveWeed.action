@@ -1,0 +1,20 @@
+# Run one weed removal cycle: search, confirm, extract, return to the scan pose.
+# The rover should be stationary for the whole goal.
+
+# Goal
+float32 search_timeout_s          # 0 = use the task controller's default (20 s)
+---
+# Result
+uint8 EXTRACTED=0                 # extraction motion completed (not verified that the weed came out)
+uint8 NO_WEED_FOUND=1             # normal: nothing to remove here
+uint8 LOST_TARGET=2               # confirmed a weed, then lost it in the final scan
+uint8 UNREACHABLE=3               # weed seen but out of the arm's reach
+uint8 PLUNGE_BLOCKED=4            # couldn't reach plunge depth, e.g. a stone
+uint8 ARM_FAULT=5                 # couldn't reach its own scan pose
+uint8 CANCELED=6
+uint8 outcome
+string message                    # human-readable reason, same text as the logs
+geometry_msgs/Point weed_position # arm base frame; only meaningful if a weed was locked on
+---
+# Feedback
+string state                      # current state, e.g. "PLUNGING"
