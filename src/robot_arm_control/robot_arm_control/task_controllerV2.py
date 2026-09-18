@@ -46,6 +46,7 @@ class RobotState(Enum):
     EXTRACTING = 9
     DONE = 10
     PAUSE = 11
+    RETREATING = 12
 
 class PBVSTaskController(Node):
     # Vision Trigger Constants
@@ -60,12 +61,14 @@ class PBVSTaskController(Node):
         self.start_scanning = False
         self.state_start_time = time.time()
         self.state = RobotState.PAUSE
+        self.failure_reason = None       # Set when a cycle gives up; reported and logged in PAUSE
 
         # --- TUNABLE PARAMETERS (Configuration) ---
         self.target_tolerance_m = 0.01      # Acceptable 3D Euclidean error (m) to consider a target reached
         self.hover_offset_z_m = 0.10        # Vertical hover distance (m)
         self.plunge_depth_m = 0.04          # Vertical plunge depth into ground (m)
         self.tcp_speed_m_s = 0.08           # Default speed of the TCP (m/s)
+        self.reach_timeout_margin_s = 3.0   # Extra time beyond a planned move before giving up on reaching it (s)
 
         # --- 90-DEGREE ARC SWEEP PARAMETERS ---
         self.sweep_radius_m = 0.50              # Radius of the arc (m)
@@ -248,6 +251,13 @@ class PBVSTaskController(Node):
         self.state_start_time = time.time()
         self.get_logger().info(f"--- Transitioning to State: {new_state.name} ---")
 
+    def fail(self, reason):
+        """Gives up on the current cycle: retreats to the scan pose, then reports in PAUSE."""
+        self.failure_reason = reason
+        self.get_logger().warn(f"Cycle failed ({reason}). Retreating to scan pose...")
+        self.retreat_start = None
+        self.switch_state(RobotState.RETREATING)
+
     # ==========================================
     #          FINITE STATE MACHINE ROUTER
     # ==========================================
@@ -281,6 +291,8 @@ class PBVSTaskController(Node):
             self.handle_done(elapsed_time)
         elif self.state == RobotState.PAUSE:
             self.handle_pause(elapsed_time)
+        elif self.state == RobotState.RETREATING:
+            self.handle_retreating(elapsed_time)
 
     # ==========================================
     #            STATE HANDLERS
@@ -469,6 +481,9 @@ class PBVSTaskController(Node):
         if error <= self.target_tolerance_m:
             self.set_gripper('close')
             self.switch_state(RobotState.GRASPING)
+        elif elapsed_time > move_duration + self.reach_timeout_margin_s:
+            # E.g. a stone or hard soil: without this the arm keeps pressing down forever.
+            self.fail("plunge depth not reached")
 
     def handle_grasping(self, elapsed_time):
         if elapsed_time > 2.0: # Waiting for the gripper to physically close
@@ -505,36 +520,73 @@ class PBVSTaskController(Node):
             self.prompted_for_input = False
             self.switch_state(RobotState.PAUSE)
 
+    def handle_retreating(self, elapsed_time):
+        # Start from where the arm actually is, not where it was told to go: after a
+        # failed plunge, the commanded depth is exactly the point it couldn't reach.
+        if self.retreat_start is None:
+            self.retreat_start = self.get_current_tcp()
+            start_x, start_y, start_z = self.retreat_start
+            self.retreat_lift_z = max(start_z, self.weeding_start_z)
+            self.retreat_up_s = max(0.2, (self.retreat_lift_z - start_z) / self.tcp_speed_m_s)
+            distance = self.calculate_tcp_error([start_x, start_y, self.retreat_lift_z], [self.scan_x, self.scan_y, self.scan_z])
+            self.retreat_back_s = max(0.2, distance / self.tcp_speed_m_s)
+
+        start_x, start_y, start_z = self.retreat_start
+        if elapsed_time <= self.retreat_up_s:
+            # Phase 1: straight up to hover height
+            current_z = self.interpolate_value(start_z, self.retreat_lift_z, elapsed_time / self.retreat_up_s)
+            self.publish_target(start_x, start_y, current_z)
+        elif elapsed_time <= self.retreat_up_s + self.retreat_back_s:
+            # Phase 2: back to the scan pose
+            progress = (elapsed_time - self.retreat_up_s) / self.retreat_back_s
+            current_x = self.interpolate_value(start_x, self.scan_x, progress)
+            current_y = self.interpolate_value(start_y, self.scan_y, progress)
+            current_z = self.interpolate_value(self.retreat_lift_z, self.scan_z, progress)
+            self.publish_target(current_x, current_y, current_z)
+        else:
+            self.publish_target(self.scan_x, self.scan_y, self.scan_z)
+            self.set_gripper('open')
+            self.reset_vision_flags()
+            self.prompted_for_input = False
+            self.switch_state(RobotState.PAUSE)
+
     def handle_pause(self, elapsed_time):
         if not self.prompted_for_input:
-            print("\n" + "="*50)
-            print("   JOB DONE! Was the weeding successful?")
-            print("   Press [1] for SUCCESS or [0] for FAILED, then press Enter.")
-            print("   (System will auto-advance as Success after 20s)")
-            print("="*50 + "\n")
+            if self.failure_reason is None:
+                print("\n" + "="*50)
+                print("   JOB DONE! Was the weeding successful?")
+                print("   Press [1] for SUCCESS or [0] for FAILED, then press Enter.")
+                print("   (System will auto-advance as Success after 20s)")
+                print("="*50 + "\n")
+                self.latest_status = "Success"
+            else:
+                self.get_logger().warn(f"CYCLE FAILED: {self.failure_reason}. Press Enter to start the next cycle.")
+                self.latest_status = f"Failed: {self.failure_reason}"
             self.prompted_for_input = True
-            self.latest_status = "Success" 
 
         # Non-blocking terminal input check
         i, o, e = select.select([sys.stdin], [], [], 0.0)
         if i:
             user_input = sys.stdin.readline().strip()
-            if user_input == '1':
-                self.latest_status = "Success"
-                self.get_logger().info("User input recorded: SUCCESS. Advancing state immediately...")
-            elif user_input == '0':
-                self.latest_status = "Failed"
-                self.get_logger().info("User input recorded: FAILED. Advancing state immediately...")
-            else:
-                self.get_logger().warn(f"Unknown input '{user_input}'. Defaulting to Success and advancing...")
-            
+            if self.failure_reason is None:
+                if user_input == '1':
+                    self.latest_status = "Success"
+                    self.get_logger().info("User input recorded: SUCCESS. Advancing state immediately...")
+                elif user_input == '0':
+                    self.latest_status = "Failed"
+                    self.get_logger().info("User input recorded: FAILED. Advancing state immediately...")
+                else:
+                    self.get_logger().warn(f"Unknown input '{user_input}'. Defaulting to Success and advancing...")
+
             self._log_final_status() # Log to CSV right away
+            self.failure_reason = None
             self.switch_state(RobotState.STARTUP)
             return
 
-        if elapsed_time > 20000.0: 
+        if elapsed_time > 20000.0:
             self.get_logger().info("Pause timeout reached. Automatically logging as Success...")
             self._log_final_status()
+            self.failure_reason = None
             self.switch_state(RobotState.STARTUP)
 
     def _log_final_status(self):
