@@ -62,6 +62,12 @@ class PBVSTaskController(Node):
         self.state_start_time = time.time()
         self.state = RobotState.PAUSE
         self.failure_reason = None       # Set when a cycle gives up; reported and logged in PAUSE
+        # Per-cycle values, reset by start_cycle()
+        self.search_start_time = None
+        self.startup_move_s = None
+        self.weeding_start_z = None
+        self.first_scan_pos = None
+        self.second_scan_pos = None
 
         # --- TUNABLE PARAMETERS (Configuration) ---
         self.target_tolerance_m = 0.01      # Acceptable 3D Euclidean error (m) to consider a target reached
@@ -76,6 +82,12 @@ class PBVSTaskController(Node):
         self.angle_end_rad =  math.pi / 6.0     # End angle
         self.sweep_period_s = 20.0              # Seconds to complete one full round-trip
         self.scan_z = 0.10                      # Height of TCP while scanning              
+
+        # --- TIMEOUTS ---
+        # Counted from the cycle's first sweep, so false positives bouncing
+        # SCAN_CONFIRM -> SCAN_SWEEP can't restart the search clock.
+        self.search_timeout_s = self.sweep_period_s  # Give up searching after one full sweep (s)
+        self.final_scan_timeout_s = 8.0              # Give up if the final scan doesn't see the weed again (s)
 
         # --- HARDWARE STATE VARIABLES ---
         self.current_joints = None       # Will hold [q_1,..., q_5] from the motor encoders
@@ -251,12 +263,29 @@ class PBVSTaskController(Node):
         self.state_start_time = time.time()
         self.get_logger().info(f"--- Transitioning to State: {new_state.name} ---")
 
-    def fail(self, reason):
+    def fail(self, reason, retreat=True):
         """Gives up on the current cycle: retreats to the scan pose, then reports in PAUSE."""
         self.failure_reason = reason
+        self.vision_command.publish(Int32(data=0))  # Tell the detection node to stop searching
+        if not retreat:
+            self.get_logger().warn(f"Cycle failed ({reason}).")
+            self.reset_vision_flags()
+            self.prompted_for_input = False
+            self.switch_state(RobotState.PAUSE)
+            return
         self.get_logger().warn(f"Cycle failed ({reason}). Retreating to scan pose...")
         self.retreat_start = None
         self.switch_state(RobotState.RETREATING)
+
+    def start_cycle(self):
+        """Resets per-cycle values and begins a new weed removal cycle."""
+        self.failure_reason = None
+        self.search_start_time = None
+        self.startup_move_s = None
+        self.weeding_start_z = None
+        self.first_scan_pos = None
+        self.second_scan_pos = None
+        self.switch_state(RobotState.STARTUP)
 
     # ==========================================
     #          FINITE STATE MACHINE ROUTER
@@ -309,22 +338,36 @@ class PBVSTaskController(Node):
             self.target_pitch = 0.0
             self.target_yaw = 0.0
             self.initial_pose_recorded = True
-        
+
+        if self.startup_move_s is None:
+            # The scan pose is commanded in one jump, so estimate how long the move should take
+            distance = self.calculate_tcp_error([self.scan_x, self.scan_y, self.scan_z], self.get_current_tcp())
+            self.startup_move_s = max(0.2, distance / self.tcp_speed_m_s)
+
         self.publish_target(
-            self.scan_x, self.scan_y, self.scan_z, 
+            self.scan_x, self.scan_y, self.scan_z,
             roll=self.target_roll, pitch=self.target_pitch, yaw=self.target_yaw
         )
-        
+
         # Calculate where the end-effector is right now
         actual_pos = self.get_current_tcp()
         error = self.calculate_tcp_error([self.scan_x, self.scan_y, self.scan_z], actual_pos)
-        
+
         # Switch to SCANNING when scanning pose is reached
         if error <= self.target_tolerance_m:
             self.reset_vision_flags()
             self.switch_state(RobotState.SCAN_SWEEP)
+        elif elapsed_time > self.startup_move_s + self.reach_timeout_margin_s:
+            # No retreat: the retreat's destination is the scan pose that just couldn't be reached.
+            self.fail("scan pose not reached", retreat=False)
 
     def handle_scan_sweep(self, elapsed_time):
+        if self.search_start_time is None:
+            self.search_start_time = time.time()
+        if time.time() - self.search_start_time > self.search_timeout_s:
+            self.fail("no weed found")
+            return
+
         if not self.start_scanning:
             if self.trigger_vision(self.TRIGGER_SWEEP):
                 self.get_logger().info("Starting continuous sweep. Triggering camera stream...")
@@ -410,14 +453,19 @@ class PBVSTaskController(Node):
             if error <= self.target_tolerance_m:
                 self.reset_vision_flags()
                 self.switch_state(RobotState.FINAL_SCAN)
+            elif elapsed_time > move_duration + self.reach_timeout_margin_s:
+                # Usually the weed is out of reach: live_ik_streamer refuses the pose, so the arm stops short.
+                self.fail("align position not reached")
 
     def handle_final_scan(self, elapsed_time):
         if not self.start_scanning:
             if self.trigger_vision(self.TRIGGER_CONFIRM):
                 self.get_logger().info("Sent trigger for Second Scan.")
-        
+
         if self.latest_cam_weed_pos is not None:
             self.switch_state(RobotState.APPROACHING)
+        elif elapsed_time > self.final_scan_timeout_s:
+            self.fail("weed lost in final scan")
 
     def handle_approaching(self, elapsed_time):
         # Phase 1: The "LOOK"
@@ -526,7 +574,8 @@ class PBVSTaskController(Node):
         if self.retreat_start is None:
             self.retreat_start = self.get_current_tcp()
             start_x, start_y, start_z = self.retreat_start
-            self.retreat_lift_z = max(start_z, self.weeding_start_z)
+            # Failures before APPROACHING happen at scan height, with no hover height set yet
+            self.retreat_lift_z = start_z if self.weeding_start_z is None else max(start_z, self.weeding_start_z)
             self.retreat_up_s = max(0.2, (self.retreat_lift_z - start_z) / self.tcp_speed_m_s)
             distance = self.calculate_tcp_error([start_x, start_y, self.retreat_lift_z], [self.scan_x, self.scan_y, self.scan_z])
             self.retreat_back_s = max(0.2, distance / self.tcp_speed_m_s)
@@ -579,21 +628,21 @@ class PBVSTaskController(Node):
                     self.get_logger().warn(f"Unknown input '{user_input}'. Defaulting to Success and advancing...")
 
             self._log_final_status() # Log to CSV right away
-            self.failure_reason = None
-            self.switch_state(RobotState.STARTUP)
+            self.start_cycle()
             return
 
         if elapsed_time > 20000.0:
             self.get_logger().info("Pause timeout reached. Automatically logging as Success...")
             self._log_final_status()
-            self.failure_reason = None
-            self.switch_state(RobotState.STARTUP)
+            self.start_cycle()
 
     def _log_final_status(self):
         """Helper to log the final operation result to CSV."""
-        if hasattr(self, 'first_scan_pos'):
+        # Reset every cycle by start_cycle(), so a cycle that fails before scanning
+        # doesn't log the previous cycle's weed positions.
+        if self.first_scan_pos is not None:
             self.log_weed_to_csv(self.first_scan_pos, "First Scan (Aligning)", self.latest_status)
-        if hasattr(self, 'second_scan_pos'):
+        if self.second_scan_pos is not None:
             self.log_weed_to_csv(self.second_scan_pos, "Second Scan (Final Approach)", self.latest_status)
 
 
