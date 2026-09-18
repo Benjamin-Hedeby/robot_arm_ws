@@ -29,6 +29,7 @@ setup(
             'task_controller = robot_arm_control.task_controllerV2:main',
             'IK_square_test = robot_arm_control.IK_square_test:main',
             'rviz_translator = robot_arm_control.rviz_translator:main',
+            'fake_arm = robot_arm_control.fake_arm:main',
         ],
     },
 )

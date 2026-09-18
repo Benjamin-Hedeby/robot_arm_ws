@@ -13,18 +13,25 @@ on the Mini PC at once. The source files themselves (task_controllerV2.py,
 live_ik_streamer.py, detections_republish.py) hardcode absolute topic names
 with a leading slash, so a namespace push on these Node actions would NOT
 reach them -- explicit remappings are the only thing that works.
+
+fake_hardware:=true replaces the camera stack with robot_arm_control's
+fake_arm (which also stands in for the Pi), so the task controller can be
+tested on any machine without the robot. Don't use it with the Pi running
+on the same ROS domain: both would publish /arm/joint_states.
 """
 
 from launch import LaunchDescription
-from launch.actions import GroupAction, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node, SetRemap
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
 
+    fake_hardware = LaunchConfiguration('fake_hardware')
     pkg_share = FindPackageShare('robot_arm_description')
     camera_config_path = PathJoinSubstitution([pkg_share, 'params', 'camera_yolo8s.yaml'])
 
@@ -69,7 +76,7 @@ def generate_launch_description():
     start_camera_cmd = GroupAction([
         SetRemap(src='/robot_description', dst='/oak_arm/robot_description'),
         camera_include,
-    ])
+    ], condition=UnlessCondition(fake_hardware))
 
     oak_remaps = [
         ('/oak/rgb/camera_info', '/oak_arm/rgb/camera_info'),
@@ -89,6 +96,7 @@ def generate_launch_description():
             ('/trigger_measurement', '/arm/trigger_measurement'),
             ('/weed_location_cam_frame', '/arm/weed_location_cam_frame'),
         ],
+        condition=UnlessCondition(fake_hardware),
     )
 
     # Optional, for monitoring/debugging via rqt or rviz -- not required by
@@ -99,6 +107,7 @@ def generate_launch_description():
         name='spatial_overlay',
         output='screen',
         remappings=oak_remaps,
+        condition=UnlessCondition(fake_hardware),
     )
 
     start_visualizer_cmd = Node(
@@ -107,6 +116,17 @@ def generate_launch_description():
         name='spatial_visualizer',
         output='screen',
         remappings=oak_remaps,
+        condition=UnlessCondition(fake_hardware),
+    )
+
+    # ================== Fake hardware (testing only) ==================
+    start_fake_arm_cmd = Node(
+        package='robot_arm_control',
+        executable='fake_arm',
+        name='fake_arm',
+        namespace='arm',
+        output='screen',
+        condition=IfCondition(fake_hardware),
     )
 
     # ================== Task Controller (FSM) + IK ==================
@@ -137,10 +157,14 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'fake_hardware', default_value='false',
+            description='Use fake_arm instead of the camera (and without the Pi) for testing'),
         start_camera_cmd,
         start_detection_republisher_cmd,
         start_overlay_cmd,
         start_visualizer_cmd,
+        start_fake_arm_cmd,
         start_task_controller_cmd,
         start_live_ik_streamer_cmd,
     ])
