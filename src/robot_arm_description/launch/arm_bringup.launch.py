@@ -18,6 +18,9 @@ fake_hardware:=true replaces the camera stack with robot_arm_control's
 fake_arm (which also stands in for the Pi), so the task controller can be
 tested on any machine without the robot. Don't use it with the Pi running
 on the same ROS domain: both would publish /arm/joint_states.
+
+Nothing moves until a cycle is requested:
+  ros2 action send_goal /arm/remove_weed robot_arm_interfaces/action/RemoveWeed "{}" --feedback
 """
 
 from launch import LaunchDescription
@@ -130,10 +133,13 @@ def generate_launch_description():
     )
 
     # ================== Task Controller (FSM) + IK ==================
+    # The namespace only affects the RemoveWeed action (a relative name -> /arm/remove_weed);
+    # its topics are absolute and remapped below.
     start_task_controller_cmd = Node(
         package='robot_arm_control',
         executable='task_controller',  # registered console_script -> task_controllerV2:main
         name='task_controller',
+        namespace='arm',
         output='screen',
         remappings=[
             ('/desired_tcp_pose_euler', '/arm/desired_tcp_pose_euler'),

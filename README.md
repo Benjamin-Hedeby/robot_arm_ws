@@ -126,6 +126,38 @@ Raspberry Pi is reachable on the same `ROS_DOMAIN_ID` and already running
 `arm_control`'s `arm.launch.py` (also namespaced `/arm`), which is the
 canonical source of `/arm/joint_states` and `/arm/robot_description`.
 
+**Starting a cycle:** the task controller waits idle until it receives a
+`RemoveWeed` action goal. Each goal runs one full cycle (search, confirm,
+extract, return to the scan pose), from any terminal on the same ROS domain:
+```bash
+ros2 action send_goal /arm/remove_weed robot_arm_interfaces/action/RemoveWeed "{}" --feedback
+# optional: give up searching after 10 s instead of the default 20 s
+ros2 action send_goal /arm/remove_weed robot_arm_interfaces/action/RemoveWeed "{search_timeout_s: 10.0}" --feedback
+```
+Feedback reports the current state. The result's `outcome` is one of
+`EXTRACTED`, `NO_WEED_FOUND`, `LOST_TARGET`, `UNREACHABLE`, `PLUNGE_BLOCKED`,
+`ARM_FAULT` or `CANCELED` (see `robot_arm_interfaces/action/RemoveWeed.action`).
+To stop a running cycle, cancel it; the arm retreats to the scan pose first. Note that
+Ctrl+C on `ros2 action send_goal` does **not** cancel the goal. Use the cancel service
+(an empty request cancels all goals):
+```bash
+ros2 service call /arm/remove_weed/_action/cancel_goal action_msgs/srv/CancelGoal "{}"
+```
+
+**Testing without hardware:**
+```bash
+ros2 launch robot_arm_description arm_bringup.launch.py fake_hardware:=true
+```
+Replaces the Pi and camera with `fake_arm`, which reports a weed when the
+camera passes over it. Send goals as above. Failure cases can be switched
+between goals:
+```bash
+ros2 param set /arm/fake_arm hard_floor_z -0.49   # stone under the weed -> PLUNGE_BLOCKED
+ros2 param set /arm/fake_arm max_detections 0     # no weed -> NO_WEED_FOUND
+ros2 param set /arm/fake_arm max_detections 2     # weed lost -> LOST_TARGET
+```
+Don't run this with the real Pi on the same ROS domain.
+
 **On a dev machine, for bench testing/visualization (not namespaced):**
 ```bash
 ros2 launch robot_arm_description rviz_robot_cam.launch.py
@@ -151,15 +183,17 @@ Run this way (no remaps), these talk on the old unnamespaced topics
 (`/joint_states`, `/arm_controller/commands`, ...) — fine for isolated bench
 testing against `rviz_robot_cam.launch.py`, but they will **not** reach the
 Pi once it's running the namespaced `arm.launch.py`. Use
-`arm_bringup.launch.py` for anything talking to real hardware.
+`arm_bringup.launch.py` for anything talking to real hardware. Start a cycle
+with `ros2 action send_goal /remove_weed robot_arm_interfaces/action/RemoveWeed "{}"`.
 
 **Same two terminals, but against real hardware:** add the `/arm` (and
 `/oak_arm`) remaps by hand so each node reaches the namespaced topics the Pi
 and camera actually use — this is the manual equivalent of what
 `arm_bringup.launch.py` does for you automatically:
 ```bash
-# Terminal 1: Task controller (main FSM)
+# Terminal 1: Task controller (main FSM); __ns puts its action at /arm/remove_weed
 ros2 run robot_arm_control task_controller --ros-args \
+  -r __ns:=/arm \
   -r /desired_tcp_pose_euler:=/arm/desired_tcp_pose_euler \
   -r /gripper_open_close_cmd:=/arm/gripper_open_close_cmd \
   -r /trigger_measurement:=/arm/trigger_measurement \

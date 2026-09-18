@@ -21,6 +21,7 @@
   <depend>vision_msgs</depend>
   <depend>control_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>robot_arm_interfaces</depend>
   <depend>heapq</depend>
 
   <export>

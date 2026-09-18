@@ -1,5 +1,7 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.action import ActionServer, CancelResponse, GoalResponse
+from rclpy.task import Future
 from std_msgs.msg import Float64MultiArray, String, Int32
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import JointState, Imu
@@ -9,8 +11,7 @@ import math
 import csv
 import os
 import time
-import sys
-import select
+from robot_arm_interfaces.action import RemoveWeed
 from .configuration import CAMERA_OFFSET_Y
 from .VisionTransformV2 import transform_camera_to_base
 from .ForwardKinematics import forward_kinematics
@@ -45,8 +46,10 @@ class RobotState(Enum):
     GRASPING = 8
     EXTRACTING = 9
     DONE = 10
-    PAUSE = 11
+    IDLE = 11           # Waiting for a RemoveWeed goal
     RETREATING = 12
+
+Outcome = RemoveWeed.Result  # Outcome.EXTRACTED, Outcome.NO_WEED_FOUND, ...
 
 class PBVSTaskController(Node):
     # Vision Trigger Constants
@@ -60,8 +63,16 @@ class PBVSTaskController(Node):
         self.initial_pose_recorded = False
         self.start_scanning = False
         self.state_start_time = time.time()
-        self.state = RobotState.PAUSE
-        self.failure_reason = None       # Set when a cycle gives up; reported and logged in PAUSE
+        self.state = RobotState.IDLE
+        self.pending_result = None       # (outcome, message) of a cycle that ended early, reported after retreating
+
+        # Action goal handling. goal_busy stays True until execute_callback has
+        # returned the result, so a new goal can't slip in between the FSM
+        # finishing and the result being sent.
+        self.goal_handle = None
+        self.goal_busy = False
+        self.cycle_future = None
+
         # Per-cycle values, reset by start_cycle()
         self.search_start_time = None
         self.startup_move_s = None
@@ -86,7 +97,8 @@ class PBVSTaskController(Node):
         # --- TIMEOUTS ---
         # Counted from the cycle's first sweep, so false positives bouncing
         # SCAN_CONFIRM -> SCAN_SWEEP can't restart the search clock.
-        self.search_timeout_s = self.sweep_period_s  # Give up searching after one full sweep (s)
+        self.default_search_timeout_s = self.sweep_period_s  # Give up searching after one full sweep (s); a goal can override it
+        self.search_timeout_s = self.default_search_timeout_s
         self.final_scan_timeout_s = 8.0              # Give up if the final scan doesn't see the weed again (s)
 
         # --- HARDWARE STATE VARIABLES ---
@@ -129,12 +141,18 @@ class PBVSTaskController(Node):
             self.csv_writer.writerow(['Timestamp', 'X_Base', 'Y_Base', 'Z_Base', 'State_Context', 'Status'])
             self.csv_file.flush()
 
-        self.prompted_for_input = False
-        self.latest_status = "Success" 
-
         # The main control loop running at 100 Hz (0.01 seconds)
         self.timer = self.create_timer(0.01, self.control_loop)
-        self.get_logger().info("Task Controller started! State: STARTUP...")
+
+        # Each RemoveWeed goal runs one cycle. The name is relative, so the node's
+        # namespace applies: /arm/remove_weed under arm_bringup.launch.py.
+        self.action_server = ActionServer(
+            self, RemoveWeed, 'remove_weed',
+            execute_callback=self.execute_callback,
+            goal_callback=self.goal_callback,
+            cancel_callback=self.cancel_callback,
+        )
+        self.get_logger().info("Task Controller ready. Waiting for RemoveWeed goals...")
 
     # ==========================================
     #             ROS2 CALLBACKS
@@ -179,6 +197,49 @@ class PBVSTaskController(Node):
         # Calculate the average of the buffer and store it
         self.camera_roll = sum(self.roll_buffer) / len(self.roll_buffer)
         self.camera_pitch = sum(self.pitch_buffer) / len(self.pitch_buffer)
+
+    # ==========================================
+    #             ACTION SERVER
+    # ==========================================
+    def goal_callback(self, goal_request):
+        if self.goal_busy:
+            self.get_logger().warn("Rejecting RemoveWeed goal: a cycle is already running.")
+            return GoalResponse.REJECT
+        if self.current_joints is None:
+            self.get_logger().warn("Rejecting RemoveWeed goal: no joint states from the arm yet.")
+            return GoalResponse.REJECT
+        return GoalResponse.ACCEPT
+
+    def cancel_callback(self, goal_handle):
+        # Accepted here; control_loop notices it and retreats before reporting CANCELED.
+        return CancelResponse.ACCEPT
+
+    async def execute_callback(self, goal_handle):
+        # Runs for the whole cycle. 'await' hands control back to the executor, so the
+        # 100 Hz control loop keeps running on this same thread while we wait.
+        self.goal_busy = True
+        self.goal_handle = goal_handle
+        requested = goal_handle.request.search_timeout_s
+        self.search_timeout_s = requested if requested > 0.0 else self.default_search_timeout_s
+        self.cycle_future = Future()
+        self.start_cycle()
+
+        outcome, message = await self.cycle_future
+
+        if outcome == Outcome.EXTRACTED:
+            goal_handle.succeed()
+        elif outcome == Outcome.CANCELED:
+            goal_handle.canceled()
+        else:
+            goal_handle.abort()
+
+        result = RemoveWeed.Result(outcome=outcome, message=message)
+        weed = self.second_scan_pos if self.second_scan_pos is not None else self.first_scan_pos
+        if weed is not None:
+            result.weed_position = Point(x=float(weed[0]), y=float(weed[1]), z=float(weed[2]))
+        self.goal_handle = None
+        self.goal_busy = False
+        return result
 
     # ==========================================
     #             HELPER METHODS
@@ -262,24 +323,33 @@ class PBVSTaskController(Node):
         self.state = new_state
         self.state_start_time = time.time()
         self.get_logger().info(f"--- Transitioning to State: {new_state.name} ---")
+        if self.goal_handle is not None:
+            self.goal_handle.publish_feedback(RemoveWeed.Feedback(state=new_state.name))
 
-    def fail(self, reason, retreat=True):
-        """Gives up on the current cycle: retreats to the scan pose, then reports in PAUSE."""
-        self.failure_reason = reason
+    def fail(self, outcome, message, retreat=True):
+        """Ends the cycle early: retreats to the scan pose, then reports the outcome."""
+        self.pending_result = (outcome, message)
         self.vision_command.publish(Int32(data=0))  # Tell the detection node to stop searching
         if not retreat:
-            self.get_logger().warn(f"Cycle failed ({reason}).")
-            self.reset_vision_flags()
-            self.prompted_for_input = False
-            self.switch_state(RobotState.PAUSE)
+            self.get_logger().warn(f"Cycle ended early ({message}).")
+            self.finish(outcome, message)
             return
-        self.get_logger().warn(f"Cycle failed ({reason}). Retreating to scan pose...")
+        self.get_logger().warn(f"Cycle ended early ({message}). Retreating to scan pose...")
         self.retreat_start = None
         self.switch_state(RobotState.RETREATING)
 
+    def finish(self, outcome, message):
+        """Ends the cycle: logs it to CSV, goes idle, and hands the result to execute_callback."""
+        status = "Extracted" if outcome == Outcome.EXTRACTED else f"Failed: {message}"
+        self._log_final_status(status)
+        self.reset_vision_flags()
+        self.switch_state(RobotState.IDLE)
+        self.get_logger().info(f"Cycle finished: {message}")
+        self.cycle_future.set_result((outcome, message))
+
     def start_cycle(self):
         """Resets per-cycle values and begins a new weed removal cycle."""
-        self.failure_reason = None
+        self.pending_result = None
         self.search_start_time = None
         self.startup_move_s = None
         self.weeding_start_z = None
@@ -293,6 +363,15 @@ class PBVSTaskController(Node):
     def control_loop(self):
         if self.current_joints is None:
             self.get_logger().info("Waiting until we receive joint states...", throttle_duration_sec=2.0)
+            return
+
+        if self.state == RobotState.IDLE:
+            return
+
+        # Honor a cancel request, except when already on the way back to the scan pose
+        if self.goal_handle.is_cancel_requested and self.state not in (RobotState.RETREATING, RobotState.DONE):
+            # Retreat first so a cancel mid-plunge doesn't leave the gripper in the soil
+            self.fail(Outcome.CANCELED, "canceled by client", retreat=self.state != RobotState.STARTUP)
             return
 
         elapsed_time = time.time() - self.state_start_time
@@ -318,8 +397,6 @@ class PBVSTaskController(Node):
             self.handle_extracting(elapsed_time)
         elif self.state == RobotState.DONE:
             self.handle_done(elapsed_time)
-        elif self.state == RobotState.PAUSE:
-            self.handle_pause(elapsed_time)
         elif self.state == RobotState.RETREATING:
             self.handle_retreating(elapsed_time)
 
@@ -359,13 +436,13 @@ class PBVSTaskController(Node):
             self.switch_state(RobotState.SCAN_SWEEP)
         elif elapsed_time > self.startup_move_s + self.reach_timeout_margin_s:
             # No retreat: the retreat's destination is the scan pose that just couldn't be reached.
-            self.fail("scan pose not reached", retreat=False)
+            self.fail(Outcome.ARM_FAULT, "scan pose not reached", retreat=False)
 
     def handle_scan_sweep(self, elapsed_time):
         if self.search_start_time is None:
             self.search_start_time = time.time()
         if time.time() - self.search_start_time > self.search_timeout_s:
-            self.fail("no weed found")
+            self.fail(Outcome.NO_WEED_FOUND, "no weed found")
             return
 
         if not self.start_scanning:
@@ -455,7 +532,7 @@ class PBVSTaskController(Node):
                 self.switch_state(RobotState.FINAL_SCAN)
             elif elapsed_time > move_duration + self.reach_timeout_margin_s:
                 # Usually the weed is out of reach: live_ik_streamer refuses the pose, so the arm stops short.
-                self.fail("align position not reached")
+                self.fail(Outcome.UNREACHABLE, "align position not reached")
 
     def handle_final_scan(self, elapsed_time):
         if not self.start_scanning:
@@ -465,7 +542,7 @@ class PBVSTaskController(Node):
         if self.latest_cam_weed_pos is not None:
             self.switch_state(RobotState.APPROACHING)
         elif elapsed_time > self.final_scan_timeout_s:
-            self.fail("weed lost in final scan")
+            self.fail(Outcome.LOST_TARGET, "weed lost in final scan")
 
     def handle_approaching(self, elapsed_time):
         # Phase 1: The "LOOK"
@@ -531,7 +608,7 @@ class PBVSTaskController(Node):
             self.switch_state(RobotState.GRASPING)
         elif elapsed_time > move_duration + self.reach_timeout_margin_s:
             # E.g. a stone or hard soil: without this the arm keeps pressing down forever.
-            self.fail("plunge depth not reached")
+            self.fail(Outcome.PLUNGE_BLOCKED, "plunge depth not reached")
 
     def handle_grasping(self, elapsed_time):
         if elapsed_time > 2.0: # Waiting for the gripper to physically close
@@ -562,11 +639,8 @@ class PBVSTaskController(Node):
             self.publish_target(current_x, current_y, current_z)
         else:
             self.publish_target(self.scan_x, self.scan_y, self.scan_z)
-            self.get_logger().info("Task complete. Waiting in safe position.", throttle_duration_sec=2.0)
             self.set_gripper('open')
-            self.reset_vision_flags()
-            self.prompted_for_input = False
-            self.switch_state(RobotState.PAUSE)
+            self.finish(Outcome.EXTRACTED, "extracted")
 
     def handle_retreating(self, elapsed_time):
         # Start from where the arm actually is, not where it was told to go: after a
@@ -595,55 +669,16 @@ class PBVSTaskController(Node):
         else:
             self.publish_target(self.scan_x, self.scan_y, self.scan_z)
             self.set_gripper('open')
-            self.reset_vision_flags()
-            self.prompted_for_input = False
-            self.switch_state(RobotState.PAUSE)
+            self.finish(*self.pending_result)
 
-    def handle_pause(self, elapsed_time):
-        if not self.prompted_for_input:
-            if self.failure_reason is None:
-                print("\n" + "="*50)
-                print("   JOB DONE! Was the weeding successful?")
-                print("   Press [1] for SUCCESS or [0] for FAILED, then press Enter.")
-                print("   (System will auto-advance as Success after 20s)")
-                print("="*50 + "\n")
-                self.latest_status = "Success"
-            else:
-                self.get_logger().warn(f"CYCLE FAILED: {self.failure_reason}. Press Enter to start the next cycle.")
-                self.latest_status = f"Failed: {self.failure_reason}"
-            self.prompted_for_input = True
-
-        # Non-blocking terminal input check
-        i, o, e = select.select([sys.stdin], [], [], 0.0)
-        if i:
-            user_input = sys.stdin.readline().strip()
-            if self.failure_reason is None:
-                if user_input == '1':
-                    self.latest_status = "Success"
-                    self.get_logger().info("User input recorded: SUCCESS. Advancing state immediately...")
-                elif user_input == '0':
-                    self.latest_status = "Failed"
-                    self.get_logger().info("User input recorded: FAILED. Advancing state immediately...")
-                else:
-                    self.get_logger().warn(f"Unknown input '{user_input}'. Defaulting to Success and advancing...")
-
-            self._log_final_status() # Log to CSV right away
-            self.start_cycle()
-            return
-
-        if elapsed_time > 20000.0:
-            self.get_logger().info("Pause timeout reached. Automatically logging as Success...")
-            self._log_final_status()
-            self.start_cycle()
-
-    def _log_final_status(self):
+    def _log_final_status(self, status):
         """Helper to log the final operation result to CSV."""
         # Reset every cycle by start_cycle(), so a cycle that fails before scanning
         # doesn't log the previous cycle's weed positions.
         if self.first_scan_pos is not None:
-            self.log_weed_to_csv(self.first_scan_pos, "First Scan (Aligning)", self.latest_status)
+            self.log_weed_to_csv(self.first_scan_pos, "First Scan (Aligning)", status)
         if self.second_scan_pos is not None:
-            self.log_weed_to_csv(self.second_scan_pos, "Second Scan (Final Approach)", self.latest_status)
+            self.log_weed_to_csv(self.second_scan_pos, "Second Scan (Final Approach)", status)
 
 
 def main(args=None):
