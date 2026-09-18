@@ -16,10 +16,10 @@ reach them -- explicit remappings are the only thing that works.
 """
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import GroupAction, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
-from launch_ros.actions import Node
+from launch_ros.actions import Node, SetRemap
 from launch_ros.substitutions import FindPackageShare
 
 
@@ -31,7 +31,7 @@ def generate_launch_description():
     # ================== Camera Driver ==================
     # Same pose/config as rviz_robot_cam.launch.py's camera include, minus
     # the dev-only bits (RViz, joint_state_publisher_gui).
-    start_camera_cmd = IncludeLaunchDescription(
+    camera_include = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([
                 FindPackageShare('depthai_ros_driver'),
@@ -60,6 +60,16 @@ def generate_launch_description():
             'params_file': camera_config_path
         }.items()
     )
+
+    # depthai's camera URDF publisher has no namespace or remap, so it would
+    # publish on /robot_description -- the topic kridtbot's controller manager
+    # (and Gazebo's spawner) read the rover's URDF from. The group scopes this
+    # remap to the camera's nodes only; it reaches the publisher even though
+    # depthai loads it as a component inside the camera container (verified).
+    start_camera_cmd = GroupAction([
+        SetRemap(src='/robot_description', dst='/oak_arm/robot_description'),
+        camera_include,
+    ])
 
     oak_remaps = [
         ('/oak/rgb/camera_info', '/oak_arm/rgb/camera_info'),
