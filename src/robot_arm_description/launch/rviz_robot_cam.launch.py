@@ -54,6 +54,13 @@ def generate_launch_description():
         # arguments=['-d', rviz_config_path] # Uncomment this line if you saved a display.rviz file!
     )
 
+    # IK Node
+    start_live_ik_streamer = Node(
+        package='robot_arm_control',
+        executable='live_ik_streamer',
+        output='screen',
+    )
+
     # ================== 3. Camera Driver ==================
     
     start_camera_cmd = IncludeLaunchDescription(
@@ -92,6 +99,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    start_overlay_orange_cmd = Node(
+        package='spatial_detector',
+        executable='spatial_overlay_orange',
+        name='spatial_overlay_orange',
+        output='screen'
+    )
+
     start_visualizer_cmd = Node(
         package='spatial_detector',
         executable='spatial_visualizer',
@@ -106,13 +120,31 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Orange detection Node
+    start_orange_detections = Node(
+        package='orange_detections',
+        executable='orange_detections',
+        output='screen',
+    )
+
+    # Orange republish Node
+    start_orange_republish = Node(
+        package='orange_detections',
+        executable='detections_republish_orange',
+        output='screen',
+    )
+
     # ================== 4. Return Everything ==================
     return LaunchDescription([
         start_rsp_cmd,
         # start_jsp_cmd,
         start_rviz_cmd,
+        start_live_ik_streamer,
         start_camera_cmd,
         start_overlay_cmd,
         start_visualizer_cmd,
-        start_detection_republisher_cmd
+        start_orange_detections,
+        start_orange_republish,
+        #start_detection_republisher_cmd,
+        start_overlay_orange_cmd,
     ])

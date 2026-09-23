@@ -6,7 +6,7 @@ import numpy as np
 A1 = 0.0435
 A2 = 0.300
 D4 = 0.389
-D6 = 0.203
+D6 = 0.275 # 0.203
 
 # Craig's Modified DH Table: [alpha_(i-1), a_(i-1), d_i]
 DH_TABLE = [

@@ -12,7 +12,7 @@ import time
 import sys
 import select
 from .configuration import CAMERA_OFFSET_Y
-from .VisionTransformV2 import transform_camera_to_base
+from .VisionTransform import transform_camera_to_base
 from .ForwardKinematics import forward_kinematics
 
 def euler_from_quaternion(x, y, z, w):
@@ -50,7 +50,7 @@ class RobotState(Enum):
 class PBVSTaskController(Node):
     # Vision Trigger Constants
     TRIGGER_SWEEP = 2
-    TRIGGER_CONFIRM = 50
+    TRIGGER_CONFIRM = 20
 
     def __init__(self):
         super().__init__('task_controller')
@@ -59,15 +59,15 @@ class PBVSTaskController(Node):
         self.initial_pose_recorded = False
         self.start_scanning = False
         self.state_start_time = time.time()
-        self.state = RobotState.PAUSE
+        self.state = RobotState.STARTUP
 
         # --- TUNABLE PARAMETERS (Configuration) ---
         self.target_tolerance_m = 0.01      # Acceptable 3D Euclidean error (m) to consider a target reached
         self.hover_offset_z_m = 0.10        # Vertical hover distance (m)
-        self.plunge_depth_m = 0.04          # Vertical plunge depth into ground (m)
+        self.plunge_depth_m = 0.06          # Vertical plunge depth into ground (m)
         self.tcp_speed_m_s = 0.08           # Default speed of the TCP (m/s)
 
-        # --- 90-DEGREE ARC SWEEP PARAMETERS ---
+        # --- 60-DEGREE ARC SWEEP PARAMETERS ---
         self.sweep_radius_m = 0.50              # Radius of the arc (m)
         self.angle_start_rad = -math.pi / 6.0   # Starting angle
         self.angle_end_rad =  math.pi / 6.0     # End angle
@@ -337,10 +337,10 @@ class PBVSTaskController(Node):
 
     def handle_scan_confirm(self, elapsed_time):
         self.publish_target(self.freeze_x, self.freeze_y, self.scan_z)
-
-        if not self.start_scanning:
-            if self.trigger_vision(self.TRIGGER_CONFIRM):
-                self.get_logger().info("Sending confirmation trigger...")
+        if elapsed_time > 0.5:  
+            if not self.start_scanning:
+                if self.trigger_vision(self.TRIGGER_CONFIRM):
+                    self.get_logger().info("Sending confirmation trigger...")
 
         if self.latest_cam_weed_pos is not None:
             self.get_logger().info("Weed confirmed")
@@ -400,9 +400,10 @@ class PBVSTaskController(Node):
                 self.switch_state(RobotState.FINAL_SCAN)
 
     def handle_final_scan(self, elapsed_time):
-        if not self.start_scanning:
-            if self.trigger_vision(self.TRIGGER_CONFIRM):
-                self.get_logger().info("Sent trigger for Second Scan.")
+        if elapsed_time > 0.5:    
+            if not self.start_scanning:
+                if self.trigger_vision(self.TRIGGER_CONFIRM):
+                    self.get_logger().info("Sent trigger for Second Scan.")
         
         if self.latest_cam_weed_pos is not None:
             self.switch_state(RobotState.APPROACHING)

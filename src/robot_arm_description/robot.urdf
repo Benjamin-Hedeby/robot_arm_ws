@@ -703,7 +703,7 @@
     <origin xyz="0.1345 -0.0204478 -0.0146925" rpy="3.14159 -0.523599 1.5708"/>
     <parent link="link_5"/>
     <child link="gripper_arm"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
   <!-- Link gripper_arm_2 -->
@@ -735,7 +735,7 @@
     <origin xyz="0.1345 0.0229486 -0.0103623" rpy="1.17839e-06 -0.523599 -1.57079"/>
     <parent link="link_5"/>
     <child link="gripper_arm_2"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
     <mimic joint="gripper1" multiplier="1.0"/>
   </joint>
@@ -768,7 +768,7 @@
     <origin xyz="0.1345 -0.00249961 0.025055" rpy="1.57079 1.5708 -1.6e-10"/>
     <parent link="link_5"/>
     <child link="gripper_arm_3"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <limit effort="100" velocity="100" lower="-3.141592653589793" upper="3.141592653589793"/>
     <mimic joint="gripper1" multiplier="1.0"/>
   </joint>
