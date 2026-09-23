@@ -34,7 +34,7 @@ def transform_camera_to_base(cam_x, cam_y, cam_z, current_joints, imu_roll=None,
     list : [X_base, Y_base, Z_base] representing the physical location on the ground
     """
     # Format the target position as a 4x1 homogeneous vector
-    P_cam = np.array([cam_x-0.023, cam_y-0.005, cam_z, 1.0])
+    P_cam = np.array([cam_x-0.02, cam_y+0.01, cam_z, 1.0])
     
     # Get where the robot thinks it is from the encoders
     T_base_tool = forward_kinematics(current_joints, verbose=False)

@@ -48,14 +48,14 @@ class OrangeTrackerNode(Node):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
         # Black out the top 150 pixels to ignore the orange robot parts
-        frame[0:170,:] = [0, 0, 0]
+        # frame[0:170,:] = [0, 0, 0]
 
-        frame[:, 0:300] = [0, 0, 0]
+        # frame[:, 0:300] = [0, 0, 0]
 
         # --- THE HSV COLOR FILTER ---
         hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        lower_orange = np.array([5, 120, 100]) 
-        upper_orange = np.array([25, 255, 255])
+        lower_orange = np.array([35, 100, 100])  #np.array([5, 120, 100]) 
+        upper_orange = np.array([85, 255, 255])  #np.array([25, 255, 255])
         orange_mask = cv2.inRange(hsv_frame, lower_orange, upper_orange)
 
         # Clean up the mask (removes noise)

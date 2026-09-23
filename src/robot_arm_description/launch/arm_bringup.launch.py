@@ -14,6 +14,12 @@ live_ik_streamer.py, detections_republish.py) hardcode absolute topic names
 with a leading slash, so a namespace push on these Node actions would NOT
 reach them -- explicit remappings are the only thing that works.
 
+detector:=hsv (default) runs the host-side HSV colour filter; detector:=yolo
+runs the OAK's on-device network instead. They are interchangeable because both
+chains end at /arm/weed_location_cam_frame, which is all the task controller
+reads -- it cannot tell which one is feeding it. Switching to yolo also needs
+i_nn_type back to 'spatial' in camera_yolo8s.yaml, since 'none' builds no NN.
+
 fake_hardware:=true replaces the camera stack with robot_arm_control's
 fake_arm (which also stands in for the Pi), so the task controller can be
 tested on any machine without the robot. Don't use it with the Pi running
@@ -27,7 +33,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription
 from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node, SetRemap
 from launch_ros.substitutions import FindPackageShare
 
@@ -35,6 +41,13 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
     fake_hardware = LaunchConfiguration('fake_hardware')
+    detector = LaunchConfiguration('detector')
+
+    def detector_is(name):
+        """True when we have real hardware AND `name` is the selected detector."""
+        return IfCondition(PythonExpression(
+            ["'", detector, "' == '", name, "' and '", fake_hardware, "' != 'true'"]))
+
     pkg_share = FindPackageShare('robot_arm_description')
     camera_config_path = PathJoinSubstitution([pkg_share, 'params', 'camera_yolo8s.yaml'])
 
@@ -86,6 +99,9 @@ def generate_launch_description():
         ('/oak/rgb/image_rect', '/oak_arm/rgb/image_rect'),
         ('/oak/nn/spatial_detections', '/oak_arm/nn/spatial_detections'),
         ('/oak/imu/data', '/oak_arm/imu/data'),
+        # Only orange_detections uses this one; a remap for a topic a node never
+        # touches is a no-op, so it costs the others nothing.
+        ('/oak/stereo/image_raw', '/oak_arm/stereo/image_raw'),
     ]
 
     # ================== Vision ==================
@@ -99,7 +115,7 @@ def generate_launch_description():
             ('/trigger_measurement', '/arm/trigger_measurement'),
             ('/weed_location_cam_frame', '/arm/weed_location_cam_frame'),
         ],
-        condition=UnlessCondition(fake_hardware),
+        condition=detector_is('yolo'),
     )
 
     # Optional, for monitoring/debugging via rqt or rviz -- not required by
@@ -110,7 +126,8 @@ def generate_launch_description():
         name='spatial_overlay',
         output='screen',
         remappings=oak_remaps,
-        condition=UnlessCondition(fake_hardware),
+        # Both read /oak/nn/spatial_detections, which does not exist without the NN.
+        condition=detector_is('yolo'),
     )
 
     start_visualizer_cmd = Node(
@@ -119,7 +136,44 @@ def generate_launch_description():
         name='spatial_visualizer',
         output='screen',
         remappings=oak_remaps,
-        condition=UnlessCondition(fake_hardware),
+        # Both read /oak/nn/spatial_detections, which does not exist without the NN.
+        condition=detector_is('yolo'),
+    )
+
+    # ================== HSV detector (host-side) ==================
+    # orange_detections thresholds the RGB image and deprojects the blob with the
+    # aligned stereo depth, so it needs rgb/image_rect, rgb/camera_info AND
+    # stereo/image_raw -- hence the stereo entry in oak_remaps. It publishes
+    # continuously; detections_republish_orange does the triggered averaging, which
+    # is why this pairs with orange_detections and not orange_detections_test (that
+    # one has its own /trigger_detection gate and would fight the republisher).
+    start_hsv_detector_cmd = Node(
+        package='orange_detections',
+        executable='orange_detections',
+        name='orange_detections',
+        output='screen',
+        remappings=oak_remaps + [
+            ('/orange_target_3d', '/arm/orange_target_3d'),
+            ('/orange_tracker/detection_overlay', '/arm/orange_tracker/detection_overlay'),
+            ('/orange_tracker/target_marker', '/arm/orange_tracker/target_marker'),
+        ],
+        condition=detector_is('hsv'),
+    )
+
+    # The HSV counterpart of detections_republish: same /range + /trigger_measurement
+    # in, same /weed_location_cam_frame out, so the task controller sees no difference.
+    start_hsv_republisher_cmd = Node(
+        package='orange_detections',
+        executable='detections_republish_orange',
+        name='detections_republish_orange',
+        output='screen',
+        remappings=[
+            ('/orange_target_3d', '/arm/orange_target_3d'),
+            ('/range', '/arm/range'),
+            ('/trigger_measurement', '/arm/trigger_measurement'),
+            ('/weed_location_cam_frame', '/arm/weed_location_cam_frame'),
+        ],
+        condition=detector_is('hsv'),
     )
 
     # ================== Fake hardware (testing only) ==================
@@ -166,10 +220,15 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'fake_hardware', default_value='false',
             description='Use fake_arm instead of the camera (and without the Pi) for testing'),
+        DeclareLaunchArgument(
+            'detector', default_value='hsv', choices=['hsv', 'yolo'],
+            description="Which perception chain feeds /arm/weed_location_cam_frame"),
         start_camera_cmd,
         start_detection_republisher_cmd,
         start_overlay_cmd,
         start_visualizer_cmd,
+        start_hsv_detector_cmd,
+        start_hsv_republisher_cmd,
         start_fake_arm_cmd,
         start_task_controller_cmd,
         start_live_ik_streamer_cmd,

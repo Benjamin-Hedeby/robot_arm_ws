@@ -5,7 +5,10 @@
     camera:
       # i_enable_nn: true
       i_pipeline_type: RGBD
-      i_nn_type: spatial
+      # none = no on-device NN. The HSV detector runs on the host off the RGB
+      # + stereo streams, which RGBD still provides. Set back to 'spatial'
+      # to use the YOLO chain.
+      i_nn_type: none
       i_enable_imu: true
       i_publish_tf_from_calibration: false
       # The find-pkg-share substitutions below resolve at launch (depthai's camera.launch.py
