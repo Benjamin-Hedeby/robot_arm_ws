@@ -29,8 +29,11 @@
       i_depth_filter_size: 5          # Smooths out noise
 
     nn:
+      # The blob itself is NOT configurable from here -- depthai_ros_driver has no
+      # blob-path parameter, and an undeclared one is dropped without a warning.
+      # NNParamHandler::getModelPath builds the path from the json's "model" block
+      # alone, so the blob lives in yolo8s.json.in (filled in at build time).
       i_nn_config_path: "$(find-pkg-share robot_arm_description)/params/yolo8s.json"
-      i_blob_path: "$(find-pkg-share robot_arm_description)/params/yolo8s_openvino_2022.1_5shave.blob"
       i_num_shaves: 5             
       i_disable_resize: true
 

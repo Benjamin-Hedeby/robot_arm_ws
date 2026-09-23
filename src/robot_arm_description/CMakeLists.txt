@@ -23,9 +23,21 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-# Install the 3D meshes
+# depthai_ros_driver resolves the NN blob from the json's "model" block only, and
+# json files get no launch substitutions -- so with zoo "path" the model_name has to
+# be an absolute path. Bake this machine's install prefix in at build time rather
+# than committing one: every clone then gets a path that is correct for itself.
+set(BLOB_PATH "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/params/yolo8s_openvino_2022.1_5shave.blob")
+configure_file(params/yolo8s.json.in ${CMAKE_CURRENT_BINARY_DIR}/yolo8s.json @ONLY)
+
+# Install the 3D meshes (the .in template is excluded -- only the filled-in copy below ships)
 install(DIRECTORY assets launch params
   DESTINATION share/${PROJECT_NAME}
+  PATTERN "*.in" EXCLUDE
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/yolo8s.json
+  DESTINATION share/${PROJECT_NAME}/params
 )
 
 # Install the URDF and config files

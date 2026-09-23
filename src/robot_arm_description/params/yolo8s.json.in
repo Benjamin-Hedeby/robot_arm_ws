@@ -1,7 +1,7 @@
 {
   "model": {
-    "model_name": "yolo8s_openvino_2022.1_5shave",
-    "zoo":       "depthai_examples"
+    "model_name": "@BLOB_PATH@",
+    "zoo":       "path"
   },
   "nn_config": {
     "input_size": "640x640",
