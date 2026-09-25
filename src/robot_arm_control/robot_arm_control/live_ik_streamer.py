@@ -43,19 +43,24 @@ class LiveIKStreamer(Node):
             # Run the Inverse Kinematics calculation
             joints = inverse_kinematics(position, orientation)
             
-            # Check the first 5 physical joints against their limits
+            # Check the first 5 physical joints against their limits.
+            # Poses arrive at ~100 Hz, and a rejected pose usually keeps being
+            # rejected until the FSM moves on, so these are throttled -- unthrottled
+            # they bury every other node's output for as long as the move is stuck.
             limit_exceeded = False
             for i in range(5):
                 if not (JOINT_LIMITS[i][0] <= joints[i] <= JOINT_LIMITS[i][1]):
                     self.get_logger().error(
                         f"SAFETY TRIGGERED! Joint {i+1} requested angle {round(joints[i], 3)} rad "
-                        f"is out of physical bounds [{round(JOINT_LIMITS[i][0], 2)}, {round(JOINT_LIMITS[i][1], 2)}]."
+                        f"is out of physical bounds [{round(JOINT_LIMITS[i][0], 2)}, {round(JOINT_LIMITS[i][1], 2)}].",
+                        throttle_duration_sec=2.0
                     )
                     limit_exceeded = True
             
             # Abort the entire movement if any joint is dangerous
             if limit_exceeded:
-                self.get_logger().warn("Move aborted to prevent self-collision!")
+                self.get_logger().warn("Move aborted to prevent self-collision!",
+                                       throttle_duration_sec=2.0)
                 return 
             # -----------------------------------
             
