@@ -85,6 +85,7 @@ class PBVSTaskController(Node):
         self.hover_offset_z_m = 0.10        # Vertical hover distance (m)
         self.plunge_depth_m = 0.04          # Vertical plunge depth into ground (m)
         self.tcp_speed_m_s = 0.08           # Default speed of the TCP (m/s)
+        self.joint_speed_rad_s = 0.25       # Speed of joint-space repositioning moves (rad/s); conservative, tune on hardware
         self.reach_timeout_margin_s = 3.0   # Extra time beyond a planned move before giving up on reaching it (s)
 
         # --- 60-DEGREE ARC SWEEP PARAMETERS ---
@@ -103,6 +104,9 @@ class PBVSTaskController(Node):
 
         # --- HARDWARE STATE VARIABLES ---
         self.current_joints = None       # Will hold [q_1,..., q_5] from the motor encoders
+        self.scan_joints = None          # Encoder values measured at the scan pose; what every return move aims for
+        self.return_start_joints = None  # Joints at the start of the current return move
+        self.return_move_s = None        # Planned duration of that return move
         self.latest_cam_weed_pos = None  # Will hold [x, y, z] from the camera frame
         self.locked_weed_base_pos = None # Memory variable to store the exact weed location before plunging
 
@@ -115,6 +119,9 @@ class PBVSTaskController(Node):
         # --- ROS2 COMMUNICATION INTERFACES ---
         # PUBLISHER: Send Cartesian coordinates to IK Streamer via Float64MultiArray
         self.target_pub = self.create_publisher(Float64MultiArray, '/desired_tcp_pose_euler', 10)
+
+        # PUBLISHER: joint-space targets for repositioning moves (see handle_done)
+        self.joint_target_pub = self.create_publisher(Float64MultiArray, '/desired_joint_positions', 10)
         
         # PUBLISHER: Send command to gripper
         self.gripper_command = self.create_publisher(String, '/gripper_open_close_cmd', 10)
@@ -314,6 +321,54 @@ class PBVSTaskController(Node):
         ax, ay, az = actual_pos
         return math.sqrt((tx - ax)**2 + (ty - ay)**2 + (tz - az)**2)
     
+    def publish_joint_target(self, joints):
+        """Commands joint angles directly, bypassing IK (see live_ik_streamer)."""
+        msg = Float64MultiArray()
+        msg.data = [float(j) for j in joints[:5]]
+        self.joint_target_pub.publish(msg)
+
+    def plan_return(self, cart_start):
+        """Work out how long the move back to the scan pose should take.
+
+        Also latches the joints the move starts from. Called once, on the first
+        tick of DONE or RETREATING's second phase.
+        """
+        self.return_start_joints = list(self.current_joints[:5])
+        if self.scan_joints is not None:
+            # Set by whichever joint has furthest to travel.
+            largest = max(abs(t - s) for s, t in zip(self.return_start_joints, self.scan_joints))
+            self.return_move_s = max(0.2, largest / self.joint_speed_rad_s)
+        else:
+            distance = self.calculate_tcp_error(list(cart_start), [self.scan_x, self.scan_y, self.scan_z])
+            self.return_move_s = max(0.2, distance / self.tcp_speed_m_s)
+
+    def traverse_to_scan(self, progress, cart_start):
+        """One step of the move back to the scan pose.
+
+        Interpolates in JOINT space: the shape of the TCP path doesn't matter here,
+        only that the arm arrives, and a straight line between two in-limit joint
+        configurations can never leave the limit box. A straight line in TCP space
+        can, even between two perfectly reachable endpoints -- the reachable
+        workspace of a 5-DOF arm with joint limits is not convex. That is what once
+        drove joint 3 past -1.83 rad on the way home from an extraction.
+
+        Falls back to the old Cartesian traverse if the arm never reached the scan
+        pose, since there is then no recorded configuration to aim for.
+        """
+        progress = min(progress, 1.0)
+        if self.scan_joints is not None:
+            self.publish_joint_target([
+                self.interpolate_value(start, target, progress)
+                for start, target in zip(self.return_start_joints, self.scan_joints)
+            ])
+        else:
+            start_x, start_y, start_z = cart_start
+            self.publish_target(
+                self.interpolate_value(start_x, self.scan_x, progress),
+                self.interpolate_value(start_y, self.scan_y, progress),
+                self.interpolate_value(start_z, self.scan_z, progress),
+            )
+
     def switch_state(self, new_state):
         """
         Handles transitioning the robot to a new state.
@@ -322,6 +377,9 @@ class PBVSTaskController(Node):
         """
         self.state = new_state
         self.state_start_time = time.time()
+        # DONE and RETREATING plan their return lazily on the first tick; clearing this
+        # on every transition means neither can inherit the previous cycle's plan.
+        self.return_start_joints = None
         self.get_logger().info(f"--- Transitioning to State: {new_state.name} ---")
         if self.goal_handle is not None:
             self.goal_handle.publish_feedback(RemoveWeed.Feedback(state=new_state.name))
@@ -432,6 +490,10 @@ class PBVSTaskController(Node):
 
         # Switch to SCANNING when scanning pose is reached
         if error <= self.target_tolerance_m:
+            # The arm is physically at the scan pose now, so its encoder values ARE the
+            # configuration to return to later -- no IK, and no risk of picking a
+            # different IK branch than the one the arm is actually standing in.
+            self.scan_joints = list(self.current_joints[:5])
             self.reset_vision_flags()
             self.switch_state(RobotState.SCAN_SWEEP)
         elif elapsed_time > self.startup_move_s + self.reach_timeout_margin_s:
@@ -633,17 +695,15 @@ class PBVSTaskController(Node):
             self.switch_state(RobotState.DONE) 
 
     def handle_done(self, elapsed_time):
-        distance = self.calculate_tcp_error([self.target_x, self.target_y, self.weeding_start_z], [self.scan_x, self.scan_y, self.scan_z])
-        move_duration = max(0.2, distance / self.tcp_speed_m_s)
-        progress = elapsed_time / move_duration
+        # Traverse home through joint space -- see traverse_to_scan for why.
+        cart_start = (self.target_x, self.target_y, self.weeding_start_z)
+        if self.return_start_joints is None:
+            self.plan_return(cart_start)
 
-        if progress <= 1.0:
-            current_x = self.interpolate_value(self.target_x, self.scan_x, progress)
-            current_y = self.interpolate_value(self.target_y, self.scan_y, progress)
-            current_z = self.interpolate_value(self.weeding_start_z, self.scan_z, progress)
-            self.publish_target(current_x, current_y, current_z)
+        if elapsed_time <= self.return_move_s:
+            self.traverse_to_scan(elapsed_time / self.return_move_s, cart_start)
         else:
-            self.publish_target(self.scan_x, self.scan_y, self.scan_z)
+            self.traverse_to_scan(1.0, cart_start)
             self.set_gripper('open')
             self.finish(Outcome.EXTRACTED, "extracted")
 
@@ -656,23 +716,26 @@ class PBVSTaskController(Node):
             # Failures before APPROACHING happen at scan height, with no hover height set yet
             self.retreat_lift_z = start_z if self.weeding_start_z is None else max(start_z, self.weeding_start_z)
             self.retreat_up_s = max(0.2, (self.retreat_lift_z - start_z) / self.tcp_speed_m_s)
-            distance = self.calculate_tcp_error([start_x, start_y, self.retreat_lift_z], [self.scan_x, self.scan_y, self.scan_z])
-            self.retreat_back_s = max(0.2, distance / self.tcp_speed_m_s)
 
         start_x, start_y, start_z = self.retreat_start
         if elapsed_time <= self.retreat_up_s:
-            # Phase 1: straight up to hover height
+            # Phase 1: straight up to hover height. Stays Cartesian -- it is short, and
+            # a straight vertical line is exactly what's wanted for clearing the soil.
             current_z = self.interpolate_value(start_z, self.retreat_lift_z, elapsed_time / self.retreat_up_s)
             self.publish_target(start_x, start_y, current_z)
-        elif elapsed_time <= self.retreat_up_s + self.retreat_back_s:
-            # Phase 2: back to the scan pose
-            progress = (elapsed_time - self.retreat_up_s) / self.retreat_back_s
-            current_x = self.interpolate_value(start_x, self.scan_x, progress)
-            current_y = self.interpolate_value(start_y, self.scan_y, progress)
-            current_z = self.interpolate_value(self.retreat_lift_z, self.scan_z, progress)
-            self.publish_target(current_x, current_y, current_z)
+            return
+
+        # Phase 2: back to the scan pose, through joint space. Planned only once the
+        # lift has finished, so it starts from the joints the arm actually ended it in.
+        cart_start = (start_x, start_y, self.retreat_lift_z)
+        if self.return_start_joints is None:
+            self.plan_return(cart_start)
+
+        phase_elapsed = elapsed_time - self.retreat_up_s
+        if phase_elapsed <= self.return_move_s:
+            self.traverse_to_scan(phase_elapsed / self.return_move_s, cart_start)
         else:
-            self.publish_target(self.scan_x, self.scan_y, self.scan_z)
+            self.traverse_to_scan(1.0, cart_start)
             self.set_gripper('open')
             self.finish(*self.pending_result)
 

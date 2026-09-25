@@ -197,6 +197,7 @@ def generate_launch_description():
         output='screen',
         remappings=[
             ('/desired_tcp_pose_euler', '/arm/desired_tcp_pose_euler'),
+            ('/desired_joint_positions', '/arm/desired_joint_positions'),
             ('/gripper_open_close_cmd', '/arm/gripper_open_close_cmd'),
             ('/trigger_measurement', '/arm/trigger_measurement'),
             ('/joint_states', '/arm/joint_states'),
@@ -212,6 +213,7 @@ def generate_launch_description():
         output='screen',
         remappings=[
             ('/desired_tcp_pose_euler', '/arm/desired_tcp_pose_euler'),
+            ('/desired_joint_positions', '/arm/desired_joint_positions'),
             ('/arm_controller/commands', '/arm/arm_controller/commands'),
         ],
     )

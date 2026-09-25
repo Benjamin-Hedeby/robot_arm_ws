@@ -18,6 +18,16 @@ class LiveIKStreamer(Node):
             10
         )
         
+        # 1b. Subscriber: joint targets that skip IK entirely. The task controller
+        # uses this for repositioning moves (going back to the scan pose), where the
+        # shape of the TCP path doesn't matter but staying inside the joint limits does.
+        self.joint_sub = self.create_subscription(
+            Float64MultiArray,
+            '/desired_joint_positions',
+            self.joint_callback,
+            10
+        )
+
         # 2. Publisher: Sends the calculated joint angles
         self.joint_pub = self.create_publisher(
             Float64MultiArray,
@@ -26,6 +36,63 @@ class LiveIKStreamer(Node):
         )
         
         self.get_logger().info("Live IK Streamer running! Expecting [X, Y, Z, Roll, Pitch, Yaw]")
+
+    def within_limits(self, joints):
+        """Check the 5 physical joints against their limits, logging any that fail.
+
+        Poses arrive at ~100 Hz, and a rejected pose usually keeps being rejected
+        until the FSM moves on, so these are throttled -- unthrottled they bury
+        every other node's output for as long as the move is stuck.
+        """
+        ok = True
+        for i in range(5):
+            if not (JOINT_LIMITS[i][0] <= joints[i] <= JOINT_LIMITS[i][1]):
+                self.get_logger().error(
+                    f"SAFETY TRIGGERED! Joint {i+1} requested angle {round(joints[i], 3)} rad "
+                    f"is out of physical bounds [{round(JOINT_LIMITS[i][0], 2)}, {round(JOINT_LIMITS[i][1], 2)}].",
+                    throttle_duration_sec=2.0
+                )
+                ok = False
+        return ok
+
+    def send_joints(self, joints):
+        """Clean up and publish the 5 physical joint angles to the controller."""
+        # Round to 4 decimal places to prevent scientific notation (e-18) from crashing the hardware controllers.
+        cleaned_joints = [round(float(j), 4) for j in joints[:5]]
+
+        # If a number is just negative zero (-0.0), force it to absolute 0.0
+        cleaned_joints = [0.0 if j == -0.0 else j for j in cleaned_joints]
+
+        cmd_msg = Float64MultiArray()
+        cmd_msg.data = cleaned_joints
+        self.joint_pub.publish(cmd_msg)
+
+        self.get_logger().info(f"Sent clean joints: {cleaned_joints}", throttle_duration_sec=2.0)
+
+    def joint_callback(self, msg):
+        """Forward a joint-space target straight to the controller, without IK.
+
+        This exists because a straight line in TCP space between two reachable
+        poses can still pass through poses the arm can't reach -- the reachable
+        workspace of a 5-DOF arm with joint limits isn't convex. A straight line
+        in joint space can't: every intermediate value lies between two in-limit
+        values, and the limits are a box. The check below should therefore never
+        fire on this path; it stays as a safety net for whatever publishes here.
+        """
+        try:
+            if len(msg.data) != 5:
+                self.get_logger().warn(f"Expected 5 joint angles, but got {len(msg.data)}")
+                return
+
+            if not self.within_limits(msg.data):
+                self.get_logger().warn("Joint target rejected: outside physical bounds!",
+                                       throttle_duration_sec=2.0)
+                return
+
+            self.send_joints(msg.data)
+
+        except Exception as e:
+            self.get_logger().error(f"Failed to stream joint target: {e}")
 
     def pose_callback(self, msg):
         try:
@@ -43,47 +110,14 @@ class LiveIKStreamer(Node):
             # Run the Inverse Kinematics calculation
             joints = inverse_kinematics(position, orientation)
             
-            # Check the first 5 physical joints against their limits.
-            # Poses arrive at ~100 Hz, and a rejected pose usually keeps being
-            # rejected until the FSM moves on, so these are throttled -- unthrottled
-            # they bury every other node's output for as long as the move is stuck.
-            limit_exceeded = False
-            for i in range(5):
-                if not (JOINT_LIMITS[i][0] <= joints[i] <= JOINT_LIMITS[i][1]):
-                    self.get_logger().error(
-                        f"SAFETY TRIGGERED! Joint {i+1} requested angle {round(joints[i], 3)} rad "
-                        f"is out of physical bounds [{round(JOINT_LIMITS[i][0], 2)}, {round(JOINT_LIMITS[i][1], 2)}].",
-                        throttle_duration_sec=2.0
-                    )
-                    limit_exceeded = True
-            
             # Abort the entire movement if any joint is dangerous
-            if limit_exceeded:
+            if not self.within_limits(joints):
                 self.get_logger().warn("Move aborted to prevent self-collision!",
                                        throttle_duration_sec=2.0)
-                return 
-            # -----------------------------------
-            
-            # Print the result to the terminal
-            #self.get_logger().info(f"Calculated Joint Angles: {[round(j, 3) for j in joints]}", throttle_duration_sec=2.0)
+                return
 
             # Changed from 6DOF to 5DOF:
-            physical_joints = joints[:5]
-            #physical_joints[4] = physical_joints[4] + 0.05
-            
-            # Round to 4 decimal places to prevent scientific notation (e-18) from crashing the hardware controllers.
-            cleaned_joints = [round(float(j), 4) for j in physical_joints]
-            
-            # If a number is just negative zero (-0.0), force it to absolute 0.0
-            cleaned_joints = [0.0 if j == -0.0 else j for j in cleaned_joints]
-            
-            # Pack and publish
-            cmd_msg = Float64MultiArray()
-            cmd_msg.data = cleaned_joints 
-            
-            self.joint_pub.publish(cmd_msg)
-            
-            self.get_logger().info(f"Sent clean joints: {cleaned_joints}", throttle_duration_sec=2.0)
+            self.send_joints(joints)
 
         except Exception as e:
             self.get_logger().error(f"Failed to stream IK: {e}")
