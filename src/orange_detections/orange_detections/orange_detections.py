@@ -99,7 +99,7 @@ class OrangeTrackerNode(Node):
                 # 1. Publish the 3D Point
                 target_msg = PointStamped()
                 target_msg.header.stamp = self.get_clock().now().to_msg()
-                target_msg.header.frame_id = "oak_rgb_camera_optical_frame" 
+                target_msg.header.frame_id = msg.header.frame_id
                 target_msg.point.x = float(x_meters)
                 target_msg.point.y = float(y_meters)
                 target_msg.point.z = float(z_meters)
@@ -113,7 +113,7 @@ class OrangeTrackerNode(Node):
                 # 2. Publish the 3D Sphere Marker for RViz
                 marker = Marker()
                 marker.header.stamp = target_msg.header.stamp
-                marker.header.frame_id = "oak_rgb_camera_optical_frame"
+                marker.header.frame_id = target_msg.header.frame_id
                 marker.ns = "weeds"
                 marker.id = 0
                 marker.type = Marker.SPHERE

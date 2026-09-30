@@ -4,6 +4,7 @@
   ros__parameters:
     camera:
       # i_enable_nn: true
+      i_mx_id: "19443010B186F81200" # Pin this driver to the ARM's OAK-D by serial
       i_pipeline_type: RGBD
       # none = no on-device NN. The HSV detector runs on the host off the RGB
       # + stereo streams, which RGBD still provides. Set back to 'spatial'
